@@ -115,6 +115,7 @@ h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;text-wrap:balanc
 #v-compra .eyebrow.bb{color:var(--baby)}
 #v-compra button:focus-visible,#v-compra input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
+#v-menu .rsearch{position:sticky;top:calc(58px + env(safe-area-inset-top,0px));z-index:4;background:var(--bg);padding-block:4px}#v-menu .rsearch input{width:100%;font:inherit;font-size:16px;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink)}#v-menu .rsearch input:focus{outline:2px solid var(--accent);outline-offset:1px}#v-menu .idx a[hidden],#v-menu .recipe[hidden]{display:none}
 .view[hidden]{display:none}
 body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:center;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px))}
@@ -792,9 +793,14 @@ function renderDay(d){
 }
 function renderRecipes(){
   const idx=Object.entries(R).map(([id,r])=>`<a href="#r-${id}" data-r="${id}">${r.title}</a>`).join("");
-  recDiv.innerHTML=`<div style="display:flex;flex-direction:column;gap:16px"><div class="box"><h2>Todas las recetas</h2><div class="idx">${idx}</div></div>`+
+  recDiv.innerHTML=`<div style="display:flex;flex-direction:column;gap:16px"><div class="rsearch"><input type="search" id="rq" placeholder="Buscar receta… (ej. pizza, nuggets)" autocomplete="off" aria-label="Buscar receta"></div><div class="box"><h2>Todas las recetas</h2><div class="idx">${idx}</div><p class="note" id="rnone" hidden>No hay ninguna receta con ese nombre.</p></div>`+
   Object.entries(R).map(([id,r])=>`<div class="box recipe" id="r-${id}"><h2>${r.title}</h2><div class="meta"><span>${r.meta}</span></div>${r.body}</div>`).join("")+`</div>`;
 }
+const norm=t=>t.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+recDiv.addEventListener("input",e=>{if(e.target.id!=="rq")return;const q=norm(e.target.value.trim());let n=0;
+recDiv.querySelectorAll(".idx a").forEach(a=>{const ok=!q||norm(a.textContent).includes(q);a.hidden=!ok;if(ok)n++});
+recDiv.querySelectorAll(".recipe").forEach(b=>{b.hidden=!!q&&!norm(b.querySelector("h2").textContent).includes(q)});
+document.getElementById("rnone").hidden=n>0});
 function select(key){
   [...nav.children].forEach(b=>b.setAttribute("aria-selected",b.dataset.k===key));
   if(key==="rec"){panel.hidden=true;recDiv.hidden=false}else{renderDay(DAYS.find(d=>d.id===key))}
