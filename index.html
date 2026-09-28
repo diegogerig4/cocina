@@ -1,0 +1,968 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Cocina en casa</title>
+<meta name="apple-mobile-web-app-title" content="Cocina">
+<meta name="application-name" content="Cocina">
+<meta name="theme-color" content="#2E7A4E">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600&display=swap">
+<style>*,*::before,*::after{box-sizing:border-box}html,body{margin:0}
+
+:root{
+  --bg:#F4F6F1; --card:#FFFFFF; --ink:#1E2A22; --muted:#5F6B62; --line:#DDE3DA;
+  --accent:#2E7A4E; --accent-soft:#E2EFE6; --warn:#B8542C; --warn-soft:#F7E6DE; --chip:#EEF1EC;
+  --baby:#7A5AA8; --baby-soft:#EEE8F6;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121814; --card:#1A221D; --ink:#E6ECE6; --muted:#9AA79E; --line:#2C372F;
+    --accent:#6BC08E; --accent-soft:#1F3427; --warn:#E58A62; --warn-soft:#3A2419; --chip:#232C26;
+    --baby:#B9A0E0; --baby-soft:#2B2438; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121814; --card:#1A221D; --ink:#E6ECE6; --muted:#9AA79E; --line:#2C372F;
+  --accent:#6BC08E; --accent-soft:#1F3427; --warn:#E58A62; --warn-soft:#3A2419; --chip:#232C26;
+  --baby:#B9A0E0; --baby-soft:#2B2438; color-scheme:dark;
+}
+body{background:var(--bg);color:var(--ink);font-family:"Figtree",system-ui,sans-serif;font-size:16px;line-height:1.45;padding:0 16px}
+.wrap{max-width:640px;margin:0 auto;padding-block:calc(20px + env(safe-area-inset-top,0px)) 60px;display:flex;flex-direction:column;gap:20px}
+h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;text-wrap:balance;margin:0}
+#v-menu h1{font-size:30px;font-weight:800;letter-spacing:-.01em}
+#v-menu h2{font-size:20px;font-weight:600}
+#v-menu h3{font-size:17px;font-weight:600}
+#v-menu .sub{color:var(--muted);margin:6px 0 0}
+#v-menu .days{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:8px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+#v-menu .days::-webkit-scrollbar{display:none}
+#v-menu .days button{flex:0 0 auto;font:inherit;font-size:14px;font-weight:600;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.15}
+#v-menu .days button small{font-weight:500;font-size:12px;color:var(--muted)}
+#v-menu .days button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+#v-menu .days button[aria-selected="true"] small{color:var(--bg)}
+#v-menu .box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px}
+#v-menu .box.hl{border-color:var(--accent)}
+#v-menu .box.bb{border-color:var(--baby)}
+#v-menu .box p,#v-menu .box ol,#v-menu .box ul{margin:0}
+#v-menu .box ol,#v-menu .box ul{padding-left:20px;display:flex;flex-direction:column;gap:6px}
+#v-menu .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600}
+#v-menu .eyebrow.bb{color:var(--baby)}
+#v-menu .note{font-size:13px;color:var(--muted)}
+#v-menu .cook{display:flex;flex-direction:column;gap:8px}
+#v-menu .cook a,#v-menu .rlink{color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid currentColor}
+#v-menu .meal{display:flex;flex-direction:column;gap:6px;padding-block:10px;border-top:1px solid var(--line)}
+#v-menu .meal:first-of-type{border-top:0;padding-top:0}
+#v-menu .meal h3{font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-family:"Figtree",sans-serif}
+#v-menu .who{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:baseline}
+#v-menu .pill{font-size:12px;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+#v-menu .pill.o{background:var(--baby-soft);color:var(--baby)}
+#v-menu .night{background:var(--warn-soft);border-color:transparent}
+#v-menu .night .eyebrow{color:var(--warn)}
+#v-menu .recipe{scroll-margin-top:70px}
+#v-menu .recipe .meta{display:flex;flex-wrap:wrap;gap:6px}
+#v-menu .recipe .meta span{font-size:12px;background:var(--chip);color:var(--muted);padding:2px 8px;border-radius:99px}
+#v-menu .recipe h4{margin:4px 0 0;font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+#v-menu .ol{background:var(--baby-soft);color:var(--ink);border-radius:8px;padding:8px 10px;font-size:14px}
+#v-menu .ol strong{color:var(--baby)}
+#v-menu .idx{display:flex;flex-wrap:wrap;gap:6px}
+#v-menu .idx a{font-size:13px;background:var(--chip);color:var(--ink);padding:4px 10px;border-radius:99px;text-decoration:none}
+#v-menu button:focus-visible,#v-menu a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#v-compra h1{font-size:30px;font-weight:800;letter-spacing:-.01em}
+#v-compra h2{font-size:20px;font-weight:600}
+#v-compra h3{font-size:17px;font-weight:600}
+#v-compra .sub{color:var(--muted);margin:6px 0 0}
+#v-compra .bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line)}
+#v-compra .prog{flex:1;height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+#v-compra .prog i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+#v-compra .count{font-variant-numeric:tabular-nums;font-weight:600;font-size:14px;white-space:nowrap}
+#v-compra button.reset{font:inherit;font-size:13px;background:none;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:5px 10px;cursor:pointer}
+#v-compra .tabs{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:6px}
+#v-compra .tabs button{font:inherit;font-size:14px;font-weight:600;padding:10px 4px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+#v-compra .tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+#v-compra section.aisle{display:flex;flex-direction:column;gap:8px}
+#v-compra .aisle h2 small{font-family:"Figtree",sans-serif;font-size:13px;color:var(--muted);font-weight:500;margin-left:6px}
+#v-compra ul.list{list-style:none;margin:0;padding:0;background:var(--card);border:1px solid var(--line);border-radius:12px}
+#v-compra ul.list li{border-bottom:1px solid var(--line)}
+#v-compra ul.list li:last-child{border-bottom:0}
+#v-compra label.item{display:grid;grid-template-columns:24px 1fr;gap:12px;padding:12px 14px;cursor:pointer;align-items:start}
+#v-compra label.item input{width:22px;height:22px;margin:1px 0 0;accent-color:var(--accent)}
+#v-compra .name{font-weight:600}
+#v-compra .qty{font-variant-numeric:tabular-nums}
+#v-compra .meta{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
+#v-compra .tag{font-size:12px;background:var(--chip);color:var(--muted);padding:2px 8px;border-radius:99px}
+#v-compra .tag.hoy{background:var(--accent-soft);color:var(--accent);font-weight:600}
+#v-compra .tag.rev{background:var(--warn-soft);color:var(--warn);font-weight:600}
+#v-compra .tag.miss{background:var(--chip);color:var(--warn);border:1px dashed var(--warn)}
+#v-compra .tag.web{background:var(--warn);color:var(--bg);font-weight:600}
+#v-compra .price{float:right;font-variant-numeric:tabular-nums;color:var(--muted);font-size:14px;margin-left:8px}
+#v-compra .tag.vok{background:var(--accent-soft);color:var(--accent);font-weight:600}
+#v-compra .brand{font-size:14px;margin-top:3px;color:var(--ink);font-weight:500}
+#v-compra .brand::before{content:"Marca: ";color:var(--muted);font-weight:400}
+#v-compra .tag.baby{background:var(--baby-soft);color:var(--baby);font-weight:600}
+#v-compra .note{font-size:13px;color:var(--muted);margin-top:4px}
+#v-compra li.done .name,#v-compra li.done .qty{text-decoration:line-through;color:var(--muted)}
+#v-compra .box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px}
+#v-compra .box.hl{border-color:var(--accent)}
+#v-compra .box.bb{border-color:var(--baby)}
+#v-compra .box p,#v-compra .box ol,#v-compra .box ul{margin:0}
+#v-compra .box ol,#v-compra .box ul{padding-left:20px;display:flex;flex-direction:column;gap:6px}
+#v-compra table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+#v-compra td{padding:8px 0;border-bottom:1px solid var(--line);vertical-align:top}
+#v-compra td:last-child{text-align:right;font-weight:600;white-space:nowrap;padding-left:10px}
+#v-compra tr:last-child td{border-bottom:0}
+#v-compra .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600}
+#v-compra .eyebrow.bb{color:var(--baby)}
+#v-compra button:focus-visible,#v-compra input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.view[hidden]{display:none}
+body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:center;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px))}
+.tabbar .in{display:flex;width:100%;max-width:640px;gap:4px}
+.tabbar button{flex:1;font:inherit;font-size:12px;font-weight:600;background:none;border:0;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;border-radius:10px;cursor:pointer}
+.tabbar button svg{width:24px;height:24px}
+.tabbar button[aria-current="true"]{color:var(--accent);background:var(--accent-soft)}
+
+</style></head><body>
+<section class="view" id="v-menu">
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Del domingo 27 al domingo 4</div>
+    <h1>Menú de la semana</h1>
+    <p class="sub">Comida rápida casera: pizzas, burgers, tacos, kebab y nuggets, hechos en casa y más sanos. Qué cocinar cada día (20–45 min) y qué come cada uno. Toca un día arriba. Las recetas completas, con todos los pesos en gramos, están en la pestaña "Recetas". Empieza leyendo <a href="#r-medidas" class="rlink" data-r="medidas">cómo medir y el fuego</a>.</p>
+  </header>
+
+  <nav class="days" id="days" role="tablist"></nav>
+  <div id="panel"></div>
+  <div id="recetas" hidden></div>
+</div>
+
+</section>
+<section class="view" id="v-compra" hidden>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Sábado 26 de septiembre</div>
+    <h1>Compra Carrefour Lugo</h1>
+    <p class="sub">Batch cooking para unas 3 semanas de comidas para Diego y Andrea, comidas para Olivia (16 meses) y picoteo para esta noche. Ya descontado lo que tienes en la despensa.</p>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button id="t-lista" role="tab" aria-selected="true">Lista</button>
+    <button id="t-dia" role="tab" aria-selected="false">Día a día</button>
+    <button id="t-plan" role="tab" aria-selected="false">Qué sale</button>
+    <button id="t-oli" role="tab" aria-selected="false">Olivia</button>
+    <button id="t-hoy" role="tab" aria-selected="false">Esta noche</button>
+    <button id="t-des" role="tab" aria-selected="false">Desayunos</button>
+  </div>
+
+  <div id="p-lista">
+    <div class="bar">
+      <div class="prog"><i id="progfill"></i></div>
+      <span class="count" id="count">0 / 0</span>
+      <button class="reset" id="reset">Desmarcar</button>
+    </div>
+    <div class="box hl" style="margin-top:14px">
+      <div class="eyebrow">Estimación con precios de Carrefour</div>
+      <table>
+        <tr><td>Lo que seguro hay que comprar</td><td id="tot-main">–</td></tr>
+        <tr><td>Menaje en naranja, si te falta</td><td id="tot-rev">–</td></tr>
+        <tr><td>Por internet o herbolario (abajo)</td><td id="tot-web">–</td></tr>
+        <tr><td><strong>Llevas en el carro</strong></td><td id="tot-cart">0,00 €</td></tr>
+      </table>
+      <p class="note">Precios de carrefour.es de hoy para la marca indicada. En la tienda de Lugo pueden variar un poco. La lista va ordenada por secciones del súper y cada producto lleva la marca exacta; "Vegano comprobado" significa que se han revisado sus ingredientes. Lo que pone "Puede no haber" no siempre está en el Carrefour de Lugo.</p>
+    </div>
+    <div class="box" style="margin-top:14px">
+      <h2>Ya lo tienes en casa</h2>
+      <ul>
+        <li><strong>No compres:</strong> arroz, mayonesa (Hellmann's vegana), harina de trigo, harina de avena (sustituye a los copos), maicena, tapioca, nori, boniatos, calabaza, queso rallado Violife, caldo para el batch, placas de lasaña (sin huevo, confirmado), aceites, sal fina, orégano, cúrcuma, comino, curry, canela, romero, nuez moscada, albahaca seca y pimienta negra y blanca.</li>
+        <li><strong>Garbanzos de bote que ya tienes</strong> (con verduras de Pedro Luis y con espinacas de Luengo): llevan sal, así que no son para Olivia. Son comidas rápidas para ti, y un poco para Andrea. Para los platos de los tres se usan garbanzos normales. Los crudos se cuecen el viernes para el seitán del sábado, el hummus y los nuggets de Olivia (550 g en remojo el jueves por la noche). Guarda el agua de cocción: sirve para hacer mayonesa.</li>
+        <li><strong>Alubias de bote:</strong> para un día sin tiempo. Las de verduras se calientan y listo; las blancas solas, al horno con aceite y especias salen crujientes para picar.</li>
+        <li><strong>Lino:</strong> tus semillas enteras no ligan. Muélelas en la trituradora justo antes de usarlas.</li>
+        <li><strong>Revisa el caldo Gallina Blanca</strong>: el de verduras suele ser vegano, pero míralo. Lleva sal, así que no es para Olivia: para ella, caldo casero (receta en su pestaña).</li>
+        <li><strong>Congelados que ya tienes</strong> (brócoli, coliflor, menestra y judías verdes, 1 kg de cada): valen para los tres. Con esto y la verdura fresca tenéis para 2–3 semanas; en la lista hay 1 bolsa más de brócoli para llegar al mes.
+          <ul>
+            <li><strong>Coliflor:</strong> nuggets de coliflor rebozados y fritos (del recetario). Crujientes, perfectos para Andrea.</li>
+            <li><strong>Brócoli:</strong> bolas de verduras del recetario (patata, zanahoria y brócoli chafados, en bolitas fritas o al horno; las de Olivia, siempre al horno). Para ella, también en puré o dentro de los muffins.</li>
+            <li><strong>Menestra:</strong> triturada dentro de la boloñesa, la lasaña o los garbanzos con tomate. Así Andrea no ve trozos y todos coméis más verdura.</li>
+            <li><strong>Judías verdes:</strong> con patata cocida y un chorrito de aceite; para Andrea y Olivia, chafadas o en crema.</li>
+          </ul>
+        </li>
+        <li><strong>Pasta:</strong> con tus tallarines, macarrones y penne vale; no compras más.</li>
+        <li><strong>Extras para comidas rápidas:</strong> el seitán bio, los botes de alubias y garbanzos con verduras, los noodles y las tortillas dürüm.</li>
+      </ul>
+    </div>
+    <details class="box" style="margin-top:14px">
+      <summary style="font-weight:600;cursor:pointer">Qué significa cada etiqueta</summary>
+      <table>
+        <tr><td><span class="tag vok">✓ Vegano comprobado</span></td><td style="white-space:normal;text-align:left;font-weight:400">Ya revisé los ingredientes. Cógelo sin mirar.</td></tr>
+        <tr><td><span class="tag rev">Mira la etiqueta</span></td><td style="white-space:normal;text-align:left;font-weight:400">No pude ver los ingredientes. Dale la vuelta y lee la lista (abajo, qué buscar).</td></tr>
+        <tr><td><span class="tag miss">Puede no haber</span></td><td style="white-space:normal;text-align:left;font-weight:400">A veces no está en tienda. Si no lo ves, no pasa nada: sigue.</td></tr>
+        <tr><td><span class="tag web">Pedir online</span></td><td style="white-space:normal;text-align:left;font-weight:400">No está en Carrefour. Se pide por internet o en un herbolario.</td></tr>
+        <tr><td><span class="tag rev">Revisar en casa</span></td><td style="white-space:normal;text-align:left;font-weight:400">Menaje que quizá ya tienes. Cómpralo solo si te falta.</td></tr>
+        <tr><td><span class="tag">Batch</span> <span class="tag baby">Olivia</span> <span class="tag hoy">Hoy</span>…</td><td style="white-space:normal;text-align:left;font-weight:400">Para qué comida es. Solo informativo.</td></tr>
+      </table>
+      <h3 style="margin-top:6px">Cuando pone "Mira la etiqueta"</h3>
+      <p>Busca en la lista de ingredientes. Si aparece alguna de estas palabras, <strong>no es vegano</strong>:</p>
+      <p style="font-weight:600">leche · leche en polvo · suero · lactosa · mantequilla · nata · queso · huevo · clara · yema · miel · gelatina · anchoa · pescado · E120 · E441 · E904</p>
+      <p><strong>"Puede contener trazas de leche o huevo"</strong> sí vale: solo avisa de que se fabrica en la misma fábrica, no es un ingrediente.</p>
+      <table>
+        <tr><td style="white-space:normal;text-align:left;font-weight:600">Tomate triturado y concentrado</td><td style="white-space:normal;text-align:left;font-weight:400">Solo tomate (sal y ácido cítrico valen).</td></tr>
+        <tr><td style="white-space:normal;text-align:left;font-weight:600">Mermelada</td><td style="white-space:normal;text-align:left;font-weight:400">Que lleve pectina, no gelatina.</td></tr>
+        <tr><td style="white-space:normal;text-align:left;font-weight:600">Pan de hamburguesa</td><td style="white-space:normal;text-align:left;font-weight:400">Sin leche, huevo ni mantequilla. Si pone E471 sin decir "de origen vegetal", el origen es desconocido: decides tú.</td></tr>
+        <tr><td style="white-space:normal;text-align:left;font-weight:600">Gluten de trigo</td><td style="white-space:normal;text-align:left;font-weight:400">Solo gluten de trigo.</td></tr>
+        <tr><td style="white-space:normal;text-align:left;font-weight:600">Remolacha cocida, avena, vinagre</td><td style="white-space:normal;text-align:left;font-weight:400">Casi siempre veganos.</td></tr>
+        <tr><td style="white-space:normal;text-align:left;font-weight:600">Sazonador para pollo (si no es Carmencita)</td><td style="white-space:normal;text-align:left;font-weight:400">Que no lleve leche, lactosa ni suero.</td></tr>
+      </table>
+    </details>
+    <div id="aisles" style="display:flex;flex-direction:column;gap:22px;margin-top:14px"></div>
+  </div>
+
+  <div id="p-dia" hidden>
+    <div class="box hl">
+      <h2>Una sola comida para los tres</h2>
+      <p>El menú está pensado para lo que le gusta a Andrea: todo fino o triturado, sin curry. Tú comes lo mismo. Olivia también.</p>
+      <ol>
+        <li>Cocina todo <strong>sin sal, sin salsa de soja y sin picante</strong>: esa es la base.</li>
+        <li>Sirve primero a Olivia y chafa o corta su ración pequeña.</li>
+        <li>Al resto de la olla, o en vuestro plato, añade sal, salsa de soja, pimentón picante o azúcar al gusto.</li>
+      </ol>
+      <p class="note">Así solo cocinas una vez y los tres coméis lo mismo. <strong>Excepción: los fritos.</strong> Olivia no come nada frito; esos días saca un tupper suyo del congelador (marcado abajo en cada día).</p>
+    </div>
+    <div class="box hl">
+      <h2>Cocinar poco a poco</h2>
+      <p>Nada de un día entero en la cocina. Cada día cocinas 1 o 2 cosas: una la coméis ese día y el resto va al congelador. Los tiempos son lo que estás tú delante; lo que cuece solo (garbanzos, seitán) no cuenta.</p>
+    </div>
+    <div class="box">
+      <table>
+        <tr><td><strong>Hoy, sáb 26</strong> · 20 min<br>Picoteo: palitos de tofu con nori + atún de garbanzos en tostas (con un bote de garbanzos normales).</td><td>20'</td></tr>
+        <tr><td><strong>Dom 27</strong><br>Base de soja → picadillo con patatas fritas o en bocadillo para comer. Congela raciones y guarda ⅓ de la base en la nevera para las albóndigas del jueves. Si aún no tienes la levadura nutricional, hazlo sin ella.</td><td>40'</td></tr>
+        <tr><td><strong>Lun 28</strong><br>Garbanzos con tomate y espinacas con 2 botes de garbanzos normales: para los tres, apartando lo de Olivia antes de salar. Sale para comer y para 1 tupper. Crema de lentejas rojas.</td><td>35'</td></tr>
+        <tr><td><strong>Mar 29</strong> · para probar<br>Pollo frito de setas para cenar. Tortitas de plátano para congelar. <em>Olivia: tupper de crema de lentejas.</em></td><td>30'</td></tr>
+        <tr><td><strong>Mié 30</strong><br>Lasaña ×2: una al horno para comer, otra al congelador.</td><td>45'</td></tr>
+        <tr><td><strong>Jue 1</strong><br>Boloñesa suave (Olivia y vosotros) + albóndigas de soja fritas. Por la noche, 550 g de garbanzos en remojo.</td><td>35'</td></tr>
+        <tr><td><strong>Vie 2</strong> · para probar<br>Garbanzos cociendo solos. Calamares de berenjena para cenar. Nuggets de tofu y hamburguesas de soja crudas al congelador. <em>Olivia: tupper de boloñesa.</em></td><td>40'</td></tr>
+        <tr><td><strong>Sáb 3</strong><br>Seitán: pollo, salchichas y filetes. Amasas y formas en 20 min; luego cuece solo 1 h. Los filetes y las tiras de pollo, al congelador ya empanados: luego solo hay que freírlos.</td><td>40'</td></tr>
+        <tr><td><strong>Dom 4</strong><br>Albóndigas de lentejas, todas sin sal y pequeñas: valen para los tres y vosotros echáis sal en el plato. Caldo casero cociendo al lado.</td><td>45'</td></tr>
+        <tr><td><strong>Siguiente semana</strong>, ratos sueltos<br>Salsas de colores en cubitos, muffins, nuggets de garbanzo y boniato, polos.</td><td>20' c/u</td></tr>
+      </table>
+      <p class="note">Si un día no puedes, sáltalo: casi todo aguanta. Lo único con prisa son las setas (antes del miércoles) y los champiñones de la lasaña (antes del jueves).</p>
+    </div>
+    <div class="box">
+      <h2>Pasta para los tres (con la que ya tienes)</h2>
+      <table>
+        <tr><td>Macarrones con boloñesa suave (la del jueves)</td><td>10'</td></tr>
+        <tr><td>Penne con salsa naranja "de queso" de calabaza, en cubitos (la de Olivia)</td><td>10'</td></tr>
+        <tr><td>Tallarines con tomate frito, picadillo y queso Violife rallado por encima</td><td>12'</td></tr>
+        <tr><td>Macarrones con salsa verde de espinacas y guisantes (la de Olivia)</td><td>10'</td></tr>
+        <tr><td>Pasta gratinada: macarrones con tomate, boloñesa y mozzarella Violife al horno</td><td>20'</td></tr>
+      </table>
+      <p class="note">A Olivia le cortas la pasta pequeña. Vosotros añadís sal, pimienta o queso en el plato.</p>
+    </div>
+    <div class="box">
+      <h2>Fritos del recetario para ir variando</h2>
+      <table>
+        <tr><td>Filetes de seitán empanados: harina con bebida de soja, pan rallado y a la sartén</td><td>10'</td></tr>
+        <tr><td>Tiras de pollo de seitán rebozadas y fritas</td><td>10'</td></tr>
+        <tr><td>Nuggets de tofu del batch, fritos o en freidora de aire</td><td>10'</td></tr>
+        <tr><td>Filete empanado de tofu: rodajas finas de tofu, rebozado y frito</td><td>15'</td></tr>
+        <tr><td>Patatas bravas: patatas fritas con la salsa brava del recetario</td><td>20'</td></tr>
+        <tr><td>Nuggets de coliflor: coliflor rebozada al horno o frita</td><td>30'</td></tr>
+      </table>
+      <p class="note">Con 1 o 2 fritos por semana ya tenéis variedad. El resto de días, lasaña, guisos, boloñesa o hamburguesas.</p>
+    </div>
+    <div class="box hl">
+      <div class="eyebrow">Sustituye al curry · 30 min · 4 raciones (hazlo doble)</div>
+      <h2>Garbanzos con tomate y espinacas</h2>
+      <ol>
+        <li>Tritura 1 cebolla y 2 ajos. Sofríe con 3 cdas de aceite de oliva 8 min a fuego medio, hasta que se doren.</li>
+        <li>Añade 1 cdta de pimentón dulce, una pizca de comino y 400 g de tomate triturado. 10 min.</li>
+        <li>Añade 2 botes de garbanzos normales escurridos y 1 puñado grande de espinacas frescas trituradas con un chorrito de agua. 10 min más.</li>
+        <li>Aparta la ración de Olivia y luego echa sal al resto. Con arroz o pan.</li>
+      </ol>
+      <p class="note">Adaptación mía de los garbanzos del recetario, en versión sin curry. Se congela muy bien.</p>
+    </div>
+    <div class="box hl">
+      <div class="eyebrow">Para probar · del recetario · 30 min</div>
+      <h2>Pollo frito de setas</h2>
+      <p class="note">Estilo pollo frito crujiente. Para 2.</p>
+      <ol>
+        <li>Separa las setas de ostra en tiras y aplástalas un poco con la mano para sacarles agua.</li>
+        <li>Mezcla mojada: 120 g de harina, 30 g de maicena, 1 cdta de sal, unas gotas de salsa picante y 360 ml de agua.</li>
+        <li>Mezcla seca: 60 g de harina, 60 g de maicena, 120 g de pan rallado y 2½ cdas de sazonador para pollo (o pimentón dulce, ajo y cebolla en polvo y orégano).</li>
+        <li>Mojada → seca → mojada → seca: doble rebozado, que es lo que lo hace crujiente.</li>
+        <li>Fríe en aceite bien caliente, pocas a la vez, hasta dorar. Escurre en papel.</li>
+        <li>Salsa: 2 cdas de mayonesa vegana, 2 de mostaza Dijon, 1 cdta de limón, 1 cdta de azúcar, sal y pimienta. Queda una salsa de mostaza dulce.</li>
+      </ol>
+    </div>
+    <div class="box hl">
+      <div class="eyebrow">Para probar · del recetario · 20 min</div>
+      <h2>Calamares de berenjena</h2>
+      <p class="note">Creo que es la receta que recuerdas: la berenjena pelada queda blanca, se cuece con sabor a mar y luego se fríe rebozada. Si lo que viste era con palmitos, eso no viene en los libros, pero te lo busco si quieres.</p>
+      <ol>
+        <li>Pela la berenjena, córtala en rodajas gruesas y quítales el centro para que queden como aros (o córtala en palitos).</li>
+        <li>Cuécelas 10 min tapadas en agua con 1 cda de salsa de soja, ½ cdta de sal, 1 hoja de nori y el zumo de ½ limón. Que no se pasen, o quedan blandas.</li>
+        <li>Escúrrelas bien. Mezcla líquida: 50 g de harina, 1 cdta de ajo en polvo y bebida de soja hasta que quede como crema. Luego pan rallado.</li>
+        <li>Fríe en aceite caliente hasta dorar. Con limón y mayonesa vegana.</li>
+      </ol>
+    </div>
+  </div>
+  <div id="p-plan" hidden>
+    <div class="box hl">
+      <h2>Cocinar para Andrea: todo fino o triturado</h2>
+      <ul>
+        <li><strong>Mejor frito y crujiente que a la plancha:</strong> pollo en tiras rebozado, filetes empanados, nuggets, calamares, albóndigas fritas. Si tenéis freidora de aire, sale casi igual con mucho menos aceite.</li>
+        <li><strong>Sofritos</strong> (cebolla, ajo, puerro): siempre pasados por la trituradora antes de la sartén, como en el batch.</li>
+        <li><strong>Lasaña:</strong> calabacín rallado y champiñones triturados con el sofrito. El ragú queda como una boloñesa lisa.</li>
+        <li><strong>Nada de curry</strong> en los platos de diario: a Andrea no le gusta ni el olor.</li>
+        <li><strong>Garbanzos con tomate:</strong> cebolla y ajo triturados, espinacas trituradas dentro de la salsa.</li>
+        <li><strong>Albóndigas de lentejas:</strong> la salsa de tomate se tritura al final.</li>
+        <li><strong>Hamburguesas:</strong> la cebolla, rallada o triturada.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h2>Lo que vais a tener en el congelador</h2>
+      <table>
+        <tr><td>Pollo de seitán</td><td>3 rac.</td></tr>
+        <tr><td>Salchichas de seitán (12 uds)</td><td>3 rac.</td></tr>
+        <tr><td>Filetes de seitán (8 uds)</td><td>4 rac.</td></tr>
+        <tr><td>Picadillo de soja</td><td>4 rac.</td></tr>
+        <tr><td>Albóndigas de soja (30 uds)</td><td>3 rac.</td></tr>
+        <tr><td>Nuggets de tofu (20 uds, crudos)</td><td>3 rac.</td></tr>
+        <tr><td>Lasaña ×2 bandejas</td><td>8 rac.</td></tr>
+        <tr><td>Garbanzos con tomate y espinacas ×2</td><td>4 rac.</td></tr>
+        <tr><td>Albóndigas de lentejas en tomate ×2</td><td>4 rac.</td></tr>
+        <tr><td>Hamburguesas de soja (6 uds, crudas)</td><td>6 rac.</td></tr>
+        <tr><td><strong>Total adultos</strong></td><td>≈ 42 rac.</td></tr>
+        <tr><td>Olivia: boloñesa, crema, albóndigas, tortitas, nuggets, pasta de colores, muffins y polos</td><td>≈ 3 semanas</td></tr>
+      </table>
+      <p class="note">42 raciones ≈ 21 comidas para los dos ≈ 3 semanas. Para llegar al mes, añade 1–2 platos rápidos a la semana (pasta o arroz salteado con verduras congeladas).</p>
+    </div>
+    <div class="box">
+      <h2>Cómo se come luego</h2>
+      <ol>
+        <li><strong>Calentar y servir:</strong> lasaña, garbanzos con tomate, albóndigas en tomate, picadillo, boloñesa.</li>
+        <li><strong>Sartén 5–10 min:</strong> pollo, salchichas, filetes, hamburguesas.</li>
+        <li><strong>Horno o freidora 20 min:</strong> nuggets y albóndigas de soja.</li>
+        <li><strong>Acompañar con:</strong> arroz, pasta o verduras congeladas.</li>
+      </ol>
+      <p class="note">Nevera 4–6 días, congelador 2–3 meses. Congela en raciones de 2 para sacar solo lo que vais a comer.</p>
+    </div>
+    <div class="box">
+      <h2>Al comprar, mira la etiqueta</h2>
+      <p>Pueden llevar leche, huevo o algo animal: pan rallado, pan de hamburguesa, margarina, placas de lasaña (algunas con huevo), caldo, queso "vegetal", crackers y pasta de letras. Elige los que pongan vegano.</p>
+    </div>
+  </div>
+
+  <div id="p-oli" hidden>
+    <div class="box bb">
+      <div class="eyebrow bb">Reglas para su plato</div>
+      <h2>Cómo cocinar para Olivia (16 meses)</h2>
+      <ul>
+        <li><strong>Sin sal ni salsa de soja en su ración.</strong> Aparta su parte antes de salar. El caldo, siempre sin sal.</li>
+        <li><strong>Sin picante</strong> (cayena, pimentón picante, jalapeño, salsa picante).</li>
+        <li><strong>Nada frito.</strong> Lo suyo, cocido, guisado, al horno o a la plancha con unas gotas de aceite.</li>
+        <li><strong>Textura:</strong> blando que se aplaste con la lengua, trocitos pequeños o chafado con tenedor.</li>
+        <li><strong>Riesgo de atragantamiento:</strong> nada de frutos secos enteros (sí en crema o molidos). Tomates cherry y uvas, en cuartos a lo largo.</li>
+        <li><strong>El seitán de la familia no es para ella</strong> todavía: es duro de masticar y lleva mucha sal y soja. Su proteína: tofu, soja texturizada fina, lentejas, garbanzos y alubias.</li>
+        <li><strong>Que tenga energía:</strong> un chorrito de aceite de oliva en cada plato, aguacate, cremas de cacahuete o tahini.</li>
+        <li><strong>Hierro + vitamina C juntos:</strong> legumbres con tomate, pimiento o fruta de postre.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h2>Importante en una peque vegana</h2>
+      <ul>
+        <li><strong>Vitamina B12:</strong> es imprescindible como suplemento. La dosis te la dice su pediatra (farmacia, no Carrefour).</li>
+        <li><strong>Bebida vegetal:</strong> soja enriquecida con calcio y sin azúcar. La de arroz no se recomienda a esta edad. La de almendra y la de avena tienen poca proteína.</li>
+        <li>Pregunta también a su pediatra por <strong>vitamina D, yodo y omega-3 (DHA de algas)</strong>. En casa, sal yodada para los mayores.</li>
+      </ul>
+      <p class="note">Esto es orientación general. Lo que diga su pediatra va por delante.</p>
+    </div>
+    <div class="box bb">
+      <div class="eyebrow bb">Ahora que está exquisita</div>
+      <h2>Que le entre por los ojos</h2>
+      <ul>
+        <li><strong>Colores y formas:</strong> pasta rosa, naranja o verde. Tortitas y "monedas" cortadas con cortadores de estrella o corazón. Plato con compartimentos, cada cosa en su hueco.</li>
+        <li><strong>Que lo coja con la mano:</strong> palitos, bolitas y nuggets para mojar en hummus o yogur. A esta edad comer sola engancha mucho.</li>
+        <li><strong>Sabor sin sal:</strong> sofrito bien pochado, tomate, pimentón dulce, orégano, albahaca, un pelín de comino. La levadura nutricional da sabor a queso y suele encantarles. En lo dulce, plátano maduro, canela o vainilla.</li>
+        <li><strong>Olor rico:</strong> caliéntalo en sartén u horno en vez de micro cuando puedas; dorado huele mucho más.</li>
+        <li><strong>Sin presión:</strong> raciones pequeñas, siempre algo que ya le gusta al lado de lo nuevo, y que os vea comer lo mismo. A veces necesitan probar una comida 10–15 veces antes de aceptarla. Es una fase muy normal a su edad.</li>
+      </ul>
+      <p class="note">Si deja de ganar peso o rechaza casi todo durante semanas, coméntalo con su pediatra.</p>
+    </div>
+    <div class="box bb">
+      <div class="eyebrow bb">Recetas divertidas · todas se congelan</div>
+      <h3>1. Tortitas de plátano y avena (≈12)</h3>
+      <ol>
+        <li>Tritura 2 plátanos muy maduros, 100 g de harina de avena (la que tienes), 150 ml de bebida de soja, 1 cda de lino molido, 1 cdta de levadura química y una pizca de canela. Reposa 5 min. Para vosotros, añade 1–2 cdas de azúcar a la masa o espolvoréalas después; la de Olivia, mejor sin.</li>
+        <li>Sartén antiadherente con unas gotas de aceite, 2 min por lado (a la plancha, no fritas). Córtalas con formas o en tiras.</li>
+        <li>Congela con papel de horno entre medias. Se calientan en 30 s en el micro o en la tostadora.</li>
+      </ol>
+      <h3>2. Nuggets de garbanzo y boniato (≈20)</h3>
+      <ol>
+        <li>Chafa 1 boniato cocido (≈300 g) con 1 bote de garbanzos escurridos.</li>
+        <li>Añade 3 cdas de avena triturada, 1 cda de levadura nutricional, ½ cdta de pimentón dulce, una pizca de comino y 1 cda de aceite.</li>
+        <li>Haz palitos o estrellas con cortador. Horno 190 ºC 20 min, vuelta a mitad.</li>
+        <li>Congela ya horneados. Del congelador al horno o freidora de aire 8 min.</li>
+      </ol>
+      <h3>3. Pasta de colores: salsas en cubitos</h3>
+      <p>Haz las tres, congélalas en cubitera de silicona y pásalas a una bolsa. Con 2–3 cubitos y un puñado de pasta cocida tienes su comida en 10 min.</p>
+      <ul>
+        <li><strong>Naranja "con queso":</strong> 400 g de calabaza y 1 zanahoria cocidas, 150 ml de bebida de soja, 2 cdas de levadura nutricional, 1 cda de aceite, pizca de ajo en polvo y de nuez moscada. Triturar.</li>
+        <li><strong>Rosa:</strong> la "salsa de pintura" del recetario sin sal. 1 remolacha cocida, 100 g de tofu blando, ½ cebolla pochada, 1 cda de levadura nutricional y un poco de agua. Triturar.</li>
+        <li><strong>Verde:</strong> 1 puñado de espinacas y 100 g de guisantes cocidos, 100 ml de bebida de soja, 1 cda de levadura nutricional, 1 cda de aceite y unas hojas de albahaca. Triturar.</li>
+      </ul>
+      <h3>4. Muffins salados de verduras (≈12 mini)</h3>
+      <ol>
+        <li>Mezcla 1 cda de lino molido con 3 cdas de agua y espera 5 min.</li>
+        <li>Mezcla 200 g de harina, 2 cdtas de levadura química, 2 cdas de levadura nutricional y orégano.</li>
+        <li>Añade 200 ml de bebida de soja, 3 cdas de aceite, el lino, 1 zanahoria y ½ calabacín rallados muy finos y escurridos.</li>
+        <li>Moldes pequeños, 180 ºC 18–20 min. Se congelan y descongelan a temperatura ambiente.</li>
+      </ol>
+      <h3>5. Monedas de lentejas con formas</h3>
+      <p>Con la masa de las mini albóndigas de abajo: aplánala y córtala con los cortadores. Horno 180 ºC 20 min.</p>
+      <h3>6. Polos de yogur y fruta</h3>
+      <p>Tritura 1 yogur de soja con ½ plátano y un puñado de frutos rojos. En moldes de polo, al congelador. Merienda o postre, y le alivia si le salen dientes.</p>
+      <p class="note">Estas recetas son adaptaciones mías para su edad, no vienen en los libros.</p>
+    </div>
+    <div class="box bb">
+      <div class="eyebrow bb">Base de todo lo suyo</div>
+      <h3>Caldo casero sin sal (≈2 L)</h3>
+      <ol>
+        <li>En una olla grande: 1 cebolla, 1 puerro, 2 zanahorias, 2 ramas de apio, 1 trozo de calabaza (≈200 g), 1 hoja de laurel y 2,5 L de agua.</li>
+        <li>Opcional para más sabor: dora antes la cebolla y el puerro con 1 cda de aceite.</li>
+        <li>40 min a fuego medio. Cuela y deja enfriar.</li>
+        <li>Congela en tuppers de 500 ml y un poco en cubitera, para tener porciones pequeñas.</li>
+      </ol>
+      <p class="note">Las verduras cocidas del caldo, trituradas con un chorrito de aceite, son un puré para ella. No se tira nada.</p>
+    </div>
+    <div class="box bb">
+      <div class="eyebrow bb">Básicos de su congelador</div>
+      <h3>Boloñesa suave (≈10 raciones)</h3>
+      <ol>
+        <li>Hidrata 150 g de soja fina en caldo sin sal 10 min y escurre.</li>
+        <li>Tritura 1 cebolla, 2 zanahorias y 1 calabacín. Sofríe con 2 cdas de aceite de oliva 8 min.</li>
+        <li>Añade la soja, 800 g de tomate triturado, una pizca de orégano y otra de pimentón dulce. 20 min a fuego bajo.</li>
+        <li>Con pasta de estrellitas o arroz. Para Andrea y para ti vale igual, añadiendo sal en el plato.</li>
+      </ol>
+      <h3>Crema de lentejas rojas con calabaza (≈8 raciones)</h3>
+      <ol>
+        <li>Sofríe ½ cebolla picada con 1 cda de aceite hasta que esté dorada: es lo que le da el olor rico.</li>
+        <li>Añade 250 g de lentejas rojas lavadas, 300 g de calabaza, 2 zanahorias y 1 L de caldo sin sal. Pizca de comino.</li>
+        <li>20 min hasta que todo esté muy blando. Tritura o chafa.</li>
+      </ol>
+      <h3>Mini albóndigas de lentejas sin sal (≈20 uds)</h3>
+      <ol>
+        <li>La receta de albóndigas de lentejas del recetario con 1 bote de lentejas, sin sal ni salsa de soja.</li>
+        <li>Bolitas pequeñas, horno 180 ºC 20 min. Quedan blandas por dentro y las puede coger con la mano.</li>
+      </ol>
+    </div>
+    <div class="box bb">
+      <div class="eyebrow bb">Todos los días</div>
+      <h2>Proteína y hierro para Olivia</h2>
+      <p>En la comida y en la cena, siempre una de estas proteínas. Todas llevan también hierro:</p>
+      <table>
+        <tr><td style="white-space:normal;text-align:left;font-weight:600">Lentejas</td><td style="white-space:normal;text-align:left;font-weight:400">Crema de lentejas, mini albóndigas, monedas</td></tr>
+        <tr><td style="white-space:normal;text-align:left;font-weight:600">Soja texturizada</td><td style="white-space:normal;text-align:left;font-weight:400">Boloñesa suave, picadillo sin sal</td></tr>
+        <tr><td style="white-space:normal;text-align:left;font-weight:600">Garbanzos</td><td style="white-space:normal;text-align:left;font-weight:400">Garbanzos con tomate, nuggets de garbanzo y boniato (al horno), hummus</td></tr>
+        <tr><td style="white-space:normal;text-align:left;font-weight:600">Tofu</td><td style="white-space:normal;text-align:left;font-weight:400">Revuelto en trocitos, dados a la plancha, dentro de la pasta rosa</td></tr>
+        <tr><td style="white-space:normal;text-align:left;font-weight:600">Alubias</td><td style="white-space:normal;text-align:left;font-weight:400">Chafadas con aceite (solo las de bote sin verduras)</td></tr>
+      </table>
+      <p><strong>Truco para que aproveche el hierro:</strong> en esa misma comida, algo con vitamina C: tomate, pimiento, brócoli o fruta de postre (naranja, mango, fresas). El yogur y la bebida de soja, mejor entre horas y no justo en esa comida.</p>
+      <p><strong>Extra de hierro:</strong> espinacas y brócoli triturados en sus salsas, avena en las tortitas y el lino molido.</p>
+    </div>
+    <div class="box">
+      <h2>Una semana tipo de Olivia</h2>
+      <table>
+        <tr><td>Desayuno</td><td>Tortitas de plátano y avena o yogur con fruta</td></tr>
+        <tr><td>Comida</td><td>Boloñesa suave, crema de lentejas o garbanzos con tomate + fruta</td></tr>
+        <tr><td>Merienda</td><td>Yogur, muffin salado o polo</td></tr>
+        <tr><td>Cena</td><td>Mini albóndigas, monedas de lentejas o tofu con verdura + fruta</td></tr>
+      </table>
+      <p class="note">Ve rotando colores y formas para que cada día parezca algo nuevo. Si un día come poco en la comida, refuerza la proteína en la cena.</p>
+    </div>
+  </div>
+
+  <div id="p-hoy" hidden>
+    <div class="box hl">
+      <div class="eyebrow">5 minutos · sin fuego</div>
+      <h2>Atún de garbanzos en tostas</h2>
+      <p class="note">Receta del recetario. Es lo más rápido que hay de verdad.</p>
+      <ol>
+        <li>Escurre 1 bote de garbanzos normales y aplástalos con tenedor. Para Andrea, casi como un paté.</li>
+        <li>Añade 1 hoja de nori y 10 alcaparras muy picadas, 50 g de veganesa, un poco de cebolla morada rallada (u omítela), 1 cda de limón, 1 cda de salsa de soja, ½ cda de mostaza Dijon, sal y pimienta.</li>
+        <li>Mezcla y sirve sobre tostas o crackers.</li>
+      </ol>
+      <p class="note">Olivia: antes de salar, apártale garbanzos chafados con aguacate y un chorrito de aceite, sin veganesa ni alcaparras.</p>
+    </div>
+    <div class="box hl">
+      <div class="eyebrow">15 minutos · fritos</div>
+      <h2>Palitos de tofu con sabor a mar</h2>
+      <p class="note">Adaptación: los fingers de tofu del recetario con nori en el rebozado para el sabor a pescado.</p>
+      <ol>
+        <li>Seca 1 bloque de tofu firme (400 g) con papel y córtalos en palitos.</li>
+        <li>Mezcla líquida: 120 g harina, 1 cda maicena, 1 cdta ajo en polvo, ½ hoja de nori desmenuzada y bebida de soja hasta que quede como crema líquida.</li>
+        <li>Mezcla seca: pan rallado con la otra ½ hoja de nori muy picada.</li>
+        <li>Palito por la líquida y luego por la seca.</li>
+        <li>Fríe en aceite bien caliente 3–4 min hasta dorar. Escurre en papel. Sal por encima solo en los vuestros.</li>
+        <li>Con veganesa y limón.</li>
+      </ol>
+      <p class="note">Olivia no come fritos: para ella, los garbanzos chafados con aguacate de arriba o un tupper suyo.</p>
+    </div>
+    <div class="box">
+      <p>No existe una receta casera de 1 minuto. Si hoy quieres cero trabajo, mira en el congelador de Carrefour si hay palitos de "pescado" vegetal.</p>
+    </div>
+  </div>
+  <div id="p-des" hidden>
+    <div class="box hl">
+      <div class="eyebrow">Domingo · 20 minutos</div>
+      <h2>Desayunos de abrir la nevera y listo</h2>
+      <p>La idea: preparas 3 cosas una vez por semana y cada mañana solo coges, tuestas y untas. Mismo estilo de pan con algo, pero más sano.</p>
+      <ol>
+        <li><strong>Pan congelado en rebanadas:</strong> integral o de centeno, de la bolsa a la tostadora.</li>
+        <li><strong>Tarro de tomate rallado:</strong> ralla 1 kg de tomates maduros con una pizca de sal. Nevera 3–4 días.</li>
+        <li><strong>Hummus casero:</strong> tritura 400 g de garbanzos cocidos (de tus crudos), el zumo de 1 limón, 1 diente de ajo pequeño, ½ cdta de comino, 4 cdas de aceite de oliva, sal y agua de cocerlos hasta que quede cremoso. Si quieres, 1 cda de sésamo tostado en sartén y triturado. Nevera 5 días.</li>
+        <li><strong>Tarros de avena de noche para ti</strong> (receta abajo). Andrea no toma avena así.</li>
+      </ol>
+    </div>
+    <div class="box">
+      <h2>Para Andrea: cosas con Nutella vegana</h2>
+      <table>
+        <tr><td>Pan tostado con Nutella vegana</td><td>1 min</td></tr>
+        <tr><td>Pan con Nutella vegana + plátano o fresas en rodajas</td><td>1 min</td></tr>
+        <tr><td>Tortitas de plátano (las de Olivia) con Nutella vegana</td><td>2 min</td></tr>
+        <tr><td>Yogur de soja con 1 cdta de Nutella vegana removida</td><td>1 min</td></tr>
+      </table>
+      
+    </div>
+    <div class="box">
+      <h2>Qué untar en vez de mantequilla</h2>
+      <table>
+        <tr><td>Tomate rallado + aceite de oliva</td><td>El más parecido</td></tr>
+        <tr><td>Violife de untar + tomate en rodajas</td><td>Cremoso</td></tr>
+        <tr><td>Hummus + un poco de pimentón dulce</td><td>Salado</td></tr>
+        <tr><td>Aguacate chafado + sal y limón</td><td>Salado</td></tr>
+        <tr><td>Crema de cacahuete + plátano en rodajas</td><td>Dulce</td></tr>
+        <tr><td>Mermelada, para Diego (en tostada con aceite o con Violife)</td><td>Dulce</td></tr>
+        <tr><td>Nutella vegana + plátano</td><td>Dulce</td></tr>
+      </table>
+      <p class="note">El aceite de oliva sobre el pan es la opción más sana para sustituir la mantequilla. La margarina úsala para cocinar, no a diario en la tostada.</p>
+    </div>
+    <div class="box hl">
+      <div class="eyebrow">Se hace la noche antes · 4–5 días en nevera</div>
+      <h3>Avena de noche para Diego (por tarro)</h3>
+      <ol>
+        <li>40 g de copos de avena, 1 yogur de soja, 100 ml de bebida de soja y 1 cdta de lino molido.</li>
+        <li>Arriba: trozos de mango o plátano, o gajos de naranja. Una pizca de canela.</li>
+        <li>Tapa y a la nevera. Por la mañana está cremosa: se come fría con cuchara.</li>
+      </ol>
+      <p class="note">Olivia puede comer la misma avena, con la fruta en trocitos pequeños.</p>
+    </div>
+    <div class="box hl">
+      <div class="eyebrow">Dulces del recetario · se congelan</div>
+      <h2>Para desayunar o merendar rico</h2>
+      <h3>Magdalenas (6)</h3>
+      <ol>
+        <li>Horno a 180 ºC. Bate 90 ml del líquido de un bote de garbanzos normales 4–5 min, hasta que haga espuma.</li>
+        <li>Añade 120 g de azúcar y bate 1 min. Luego 80 ml de aceite de girasol, 100 ml de bebida de soja y 1 cdta de vainilla (o ralladura de limón).</li>
+        <li>Aparte, 180 g de harina, 10 g de levadura química y una pizca de sal. Júntalo todo sin batir de más.</li>
+        <li>Moldes a ¾, 18–20 min.</li>
+      </ol>
+      <h3>Bizcocho de limón</h3>
+      <ol>
+        <li>Mezcla 2 cdas de lino molido con 6 cdas de agua y espera 10 min.</li>
+        <li>Mezcla 250 g de harina, 120 g de azúcar y 15 g de levadura química.</li>
+        <li>Añade 250 ml de bebida de soja, 80 ml de aceite de girasol, la ralladura de 2 limones, el zumo de 1 y el lino.</li>
+        <li>Molde engrasado, 180 ºC 35–40 min. Deja enfriar 1 h antes de cortarlo.</li>
+      </ol>
+      <p class="note">Se congelan en porciones y se descongelan solas en un rato. El libro usa harina integral para el bizcocho; con harina normal queda más esponjoso.</p>
+    </div>
+    <div class="box">
+      <h2>Una semana de desayunos</h2>
+      <table>
+        <tr><td>Lunes y jueves</td><td>Tostada con tomate y aceite</td></tr>
+        <tr><td>Martes y viernes</td><td>Diego: avena de noche · Andrea: tortitas de plátano con Nutella vegana</td></tr>
+        <tr><td>Miércoles</td><td>Tostada con hummus o con Nutella vegana</td></tr>
+        <tr><td>Fin de semana</td><td>Tortitas de plátano (las de Olivia) o tostada con aguacate</td></tr>
+        <tr><td>Para picar o merendar</td><td>Magdalena, bizcocho, fruta o yogur con azúcar</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+</section>
+<nav class="tabbar" aria-label="Secciones"><div class="in">
+<button data-go="menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Menú</button>
+<button data-go="rec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h10a4 4 0 0 1 4 4v12H8a4 4 0 0 1-4-4z"/><path d="M8 9h6M8 13h6"/></svg>Recetas</button>
+<button data-go="compra"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.4 11h10.6l2-8H6.2"/><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/></svg>Compra</button>
+</div></nav>
+<script>
+(function(){
+
+const DAYS=[
+{id:"d27",label:"Dom",date:"27",iso:"2026-09-27",
+ cook:[["Base de soja → picadillo","picadillo","35'"],["Tomate rallado para desayunos","tomate","5'"]],
+ meals:[
+  ["Desayuno","Diego: tostada con tomate rallado y aceite · Andrea: pan tostado con Nutella vegana","Yogur Sojasun con plátano chafado"],
+  ["Comida","Picadillo con patatas fritas o en bocadillo","Su picadillo sin sal con arroz y un poco de tomate triturado · naranja"],
+  ["Cena / picoteo","Quesadillas de picadillo con queso Violife fundido","Tofu revuelto con calabacín rallado"]],
+ night:"Prepara tu tarro de avena de noche para mañana (con yogur mientras no llegue la bebida de soja)."},
+{id:"d28",label:"Lun",date:"28",iso:"2026-09-28",
+ cook:[["Hamburguesas de soja (6: 3 hoy, 3 para el viernes)","hamburguesas","25'"],["Mini burgers de Olivia (12, se congelan)","mini-burgers","20'"],["Nuggets de coliflor","coliflor","25'"]],
+ meals:[
+  ["Desayuno","Diego: avena de noche · Andrea: tostada con Violife de untar y tomate","Pan con aguacate chafado + yogur"],
+  ["Comida","Burger de soja con queso fundido, lechuga, tomate y mayonesa + patatas fritas","Mini burger de lentejas con tomate en daditos, como papá y mamá · mango"],
+  ["Cena / picoteo","Nuggets de coliflor crujientes con salsa de mostaza dulce","Sus nuggets de coliflor: rebozado de harina de garbanzo (proteína y hierro), en airfryer y sin sal · yogur para mojar"]],
+ night:"Congela las 3 hamburguesas crudas que sobran y las mini burgers de Olivia, con papel de horno entre medias."},
+{id:"d29",label:"Mar",date:"29",iso:"2026-09-29",
+ cook:[["Tacos de picadillo","tacos","12'"],["Tortitas de plátano (para congelar)","tortitas","15'"],["Burger de pollo crujiente (pollo frito de setas)","pollo-setas","30'"],["Nuggets de tofu al horno (Olivia)","nuggets-tofu-olivia","5' + 15' horno"]],
+ meals:[
+  ["Desayuno","Diego: tostada con tomate · Andrea: pan con Nutella vegana","Yogur con mango chafado"],
+  ["Comida","Tacos de picadillo con queso fundido, lechuga y tomate","Su mini taco: trocito de tortilla con su picadillo sin sal, aguacate chafado y tomate en daditos"],
+  ["Cena / picoteo","Burger de pollo crujiente con salsa de mostaza dulce + patatas","Su mini burger crujiente: nuggets de tofu en airfryer dentro de un trocito de pan, con tomate · brócoli"]],
+ night:"Prepara avena de noche para mañana. Al mediodía del miércoles harás la masa de las albóndigas."},
+{id:"d30",label:"Mié",date:"30",iso:"2026-09-30",
+ cook:[["Boloñesa grande (pizza, Olivia y lasaña)","bolonesa","40'"],["Pizza de boloñesa (masa rápida sin levadura)","pizza","25'"],["Mini pizzas de Olivia (con un trozo de la misma masa)","mini-pizza","+5'"],["Masa de albóndigas (al mediodía)","albondigas-soja","15'"],["Sándwich de albóndigas (cena)","sandwich-albondigas","5'"]],
+ meals:[
+  ["Desayuno","Diego: avena de noche · Andrea: tortitas con Nutella vegana","Tortitas de plátano + yogur"],
+  ["Comida","Pizza casera de boloñesa y mozzarella Violife","Mini pizza de boloñesa, igual que la vuestra · fruta"],
+  ["Cena / picoteo","Sándwich de albóndigas con tomate y queso fundido (tipo meatball sub)","Sus 3 albóndigas en airfryer (de la misma masa, apartada antes de la mostaza) con tomate triturado y un trocito de pan"]],
+ night:"Guarda en la nevera la mitad de la boloñesa para la lasaña de mañana y 1 tupper de Olivia. El resto de tuppers de Olivia, al congelador."},
+{id:"d31",label:"Jue",date:"1",iso:"2026-10-01",
+ cook:[["Lasaña ×2 (una se come, otra al congelador)","lasana","40'"],["Nachos gratinados","nachos","15'"]],
+ meals:[
+  ["Desayuno","Diego: tostada con tomate · Andrea: tostada con Violife y tomate","Pan con aguacate + yogur"],
+  ["Comida","Lasaña gratinada","Su mini lasaña: en un cuenco pequeño, con su boloñesa sin sal y bechamel sin sal, al horno con la vuestra · fruta"],
+  ["Cena / picoteo","Nachos con boloñesa y queso fundido","Sus nachos: 3 triángulos de tortilla sin sal con su boloñesa y guacamole (aguacate chafado con tomate)"]],
+ night:"Pon 550 g de garbanzos secos en remojo. Pasa las 3 hamburguesas del congelador a la nevera. Avena de noche para mañana."},
+{id:"d32",label:"Vie",date:"2",iso:"2026-10-02",
+ cook:[["Cocer los garbanzos (solos, por la mañana)","cocer-garbanzos","5' + 1 h 30 solo"],["Hummus","hummus","5'"],["Calamares de berenjena","calamares","25'"]],
+ meals:[
+  ["Desayuno","Diego: avena de noche · Andrea: tortitas con Nutella vegana","Tortitas + fruta"],
+  ["Comida","Las 3 burgers del lunes con patatas fritas","Su mini burger de lentejas del congelador, como vuestra burger · naranja"],
+  ["Cena / picoteo","Bocata de calamares con mayonesa y limón + hummus con crackers","Sus calamares: palitos de berenjena cocidos en agua sin sal, rebozados en harina de garbanzo, en airfryer · su hummus sin sal para mojar"]],
+ night:"Deja los garbanzos cocidos en la nevera (720 g para el seitán). Comprueba que te ha llegado el gluten y la levadura nutricional."},
+{id:"d33",label:"Sáb",date:"3",iso:"2026-10-03",
+ cook:[["Seitán: pollo, salchichas y filetes","seitan","25' + 1 h solo"],["Kebab de seitán con pan de pita rápido","kebab","20'"],["Nuggets de garbanzo y boniato (Olivia: su kebab y sus salchipapas)","nuggets-boniato","10' + 12' airfryer"]],
+ meals:[
+  ["Desayuno","Diego: tostada con hummus · Andrea: pan con Nutella vegana","Yogur con plátano"],
+  ["Comida","Kebab de seitán con salsa de yogur, lechuga y tomate + patatas","Su mini kebab: trocito de pita con sus nuggets de garbanzo y boniato, tomate y yogur de soja como salsa · fruta"],
+  ["Cena / picoteo","Salchipapas: salchichas de seitán fritas con patatas, mayonesa y mostaza","Sus salchipapas: nuggets de garbanzo y boniato con forma de salchicha + patatas en airfryer sin sal"]],
+ night:"Pasa 1 tupper de boloñesa de Olivia del congelador a la nevera. Congela el seitán que no uséis (los filetes ya empanados)."},
+{id:"d34",label:"Dom",date:"4",iso:"2026-10-04",
+ cook:[["Escalope de seitán empanado","escalope","15'"],["Pizza de salchichas (masa rápida o tortilla)","pizza","25'"],["Caldo casero sin sal (cuece solo)","caldo","10' + 40' solo"]],
+ meals:[
+  ["Desayuno","Diego: tostada con tomate · Andrea: tortitas con Nutella vegana","Tortitas + yogur"],
+  ["Comida","Escalope de seitán empanado con patatas fritas y mayonesa","Su escalope: filete de tofu empanado en airfryer y sin sal, con patata · fruta"],
+  ["Cena / picoteo","Pizza de salchichas de seitán y mozzarella Violife","Su mini pizza de boloñesa (del congelador)"]],
+ night:"Congela el caldo en tuppers y un poco en cubitera. La semana que viene ya tenéis el congelador lleno: te hago el menú de la semana 2 cuando me digas."}
+];
+
+const R={};
+function rec(id,title,meta,body){R[id]={title,meta,body}}
+
+rec("medidas","Cómo medir y el fuego","Léelo una vez",`
+<ul><li><strong>Pesa con báscula</strong> todo lo que pone en gramos (g). Los líquidos van en mililitros (ml): usa un vaso medidor o la báscula (1 ml de agua o bebida de soja ≈ 1 g).</li>
+<li><strong>Si no tienes báscula a mano:</strong> 1 cda (cucharada sopera rasa) de aceite ≈ 12 g · de harina ≈ 9 g · de pan rallado ≈ 7 g · de tomate concentrado ≈ 15 g · 1 cdta (cucharilla de café rasa) de especias ≈ 2 g · de sal ≈ 5 g.</li>
+<li><strong>Fuego</strong> (vitro de 1 a 9): bajo = 3–4 · medio = 5–6 · medio-alto = 7 · alto = 8–9.</li>
+<li><strong>Aceite para freír:</strong> que cubra 1 cm la sartén. Está listo cuando echas una miga de pan y burbujea enseguida (fuego medio-alto, unos 3 min de calentar).</li>
+<li><strong>Olivia:</strong> su parte siempre sin sal, sin salsa de soja y sin picante. Nunca frita en aceite. La <strong>airfryer sí vale</strong>: es aire caliente, como un horno pequeño. Úntalos con 2–3 g de aceite como mucho.</li><li><strong>Airfryer para vosotros:</strong> casi todos los fritos (nuggets, calamares, pollo crujiente, patatas) salen en 180–200 ºC 10–15 min, pintados con 10–15 g de aceite y sacudiendo a mitad.</li></ul>`);
+
+rec("picadillo","Base de soja → picadillo","35 min · sale: comida de hoy, 2 tuppers de Olivia, 1 tupper para los tacos del martes y 1 para las albóndigas del miércoles",`
+<h4>Ingredientes</h4><ul>
+<li>550 g de soja texturizada Carrefour</li>
+<li>1.000 ml de agua caliente (del grifo muy caliente o del microondas 3 min)</li>
+<li>3 cebollas grandes (≈750 g) y 6 dientes de ajo (≈30 g)</li>
+<li>70 ml de aceite de oliva</li>
+<li>45 g de tomate concentrado</li>
+<li>4 g de pimentón dulce</li>
+<li><strong>Solo para vosotros, al final:</strong> 60 ml de salsa de soja · 2 g de pimentón ahumado · 2 hojas de laurel · 2 g de orégano · 2 g de comino · 3 g de ajo en polvo · sal al gusto (unos 3 g) · 15 g de levadura nutricional si ya la tienes</li></ul>
+<h4>Pasos</h4><ol>
+<li>Echa la soja en un bol grande con el agua caliente. Espera 10 min.</li>
+<li>Mientras: pela las cebollas y los ajos, córtalos en trozos y tritúralos en la trituradora hasta que quede como un puré grueso.</li>
+<li>Escurre la soja en un colador y apriétala con las manos, a puñados, hasta que no suelte más agua.</li>
+<li>Sartén grande u olla ancha, fuego medio (5–6), con los 70 ml de aceite. Echa el triturado de cebolla y ajo. 8 min removiendo de vez en cuando, hasta que esté dorado claro.</li>
+<li>Añade los 45 g de tomate concentrado y los 4 g de pimentón dulce. Remueve 1 min.</li>
+<li>Añade la soja. Sube a fuego medio-alto (7). 8 min removiendo cada minuto, hasta que se vea un poco tostada.</li>
+<li><strong>Aparta para Olivia 2 tuppers de 125 g</strong> (uno para hoy, otro para el martes, a la nevera).</li>
+<li><strong>Aparta 400 g</strong> en otro tupper a la nevera: son las albóndigas del miércoles.</li>
+<li>A lo que queda en la sartén: la salsa de soja, el pimentón ahumado, el laurel, el orégano, el comino, el ajo en polvo, la levadura y la sal. Fuego medio 5 min removiendo.</li>
+<li>Guarda 300 g de picadillo en un tupper para los tacos del martes. El resto es la comida de hoy (quita las hojas de laurel).</li></ol>
+<div class="ol"><strong>Olivia:</strong> 125 g de su picadillo + 40 g de arroz (en crudo) cocido + 2 cdas de tomate triturado calentado 2 min en el micro.</div>`);
+
+rec("patatas","Patatas fritas caseras","20 min · para 2",`<ol><li>Pela 500 g de patatas (unas 3). Córtalas en bastones de 1 cm de grosor.</li><li>Lávalas bajo el grifo y sécalas bien con papel de cocina.</li><li>Sartén con 300 ml de aceite de girasol a fuego medio (6). Cuando esté caliente, echa las patatas y fríelas 8–10 min, moviéndolas de vez en cuando, hasta que estén blandas.</li><li>Sácalas con una espumadera, sube a fuego alto (8) 1 min y vuelve a echarlas 2 min más para que queden crujientes.</li><li>Escurre en papel y echa 2 g de sal por encima.</li><li>Freidora de aire: bastones + 12 g de aceite, 200 ºC 20 min, removiendo a los 10.</li></ol>`);
+
+rec("quesadillas","Quesadillas de picadillo","10 min · 2 quesadillas",`<ol><li>Sartén grande sin aceite a fuego medio (5).</li><li>Pon 1 tortilla dürüm. En una mitad: 100 g de picadillo y 30 g de Violife rallado. Dobla por la mitad.</li><li>2 min, dale la vuelta con una espátula, 2 min más, hasta que esté dorada y el queso fundido.</li><li>Repite con la segunda. Corta cada una en 3 triángulos. Con mayonesa vegana o mostaza.</li></ol>`);
+
+rec("tofu-olivia","Tofu revuelto para Olivia","6 min · 1 ración",`
+<h4>Ingredientes</h4><ul><li>80 g de tofu natural</li><li>50 g de calabacín rallado (≈¼ de calabacín)</li><li>3 g de aceite de oliva (1 cucharilla)</li><li>Una pizca de cúrcuma (opcional, solo para el color)</li></ul>
+<h4>Pasos</h4><ol><li>Chafa el tofu con un tenedor en un plato hasta que parezca huevo revuelto.</li><li>Sartén pequeña a fuego medio (5) con el aceite. Echa el calabacín rallado (no hace falta escurrirlo) y remueve 2 min.</li><li>Añade el tofu y la cúrcuma. 3 min removiendo. Sin sal.</li><li>Deja templar 2 min antes de dárselo.</li></ol>
+<div class="ol"><strong>El calabacín rallado</strong> no hay que cocinarlo antes: se hace dentro de la receta. Solo si se lo das solo, cuécelo: sartén con 3 g de aceite a fuego medio 4 min, o en un plato tapado al micro 2 min.</div>`);
+
+rec("nuggets-tofu-olivia","Nuggets de tofu al horno (Olivia)","5 min + 15 min horno · 1 ración",`<ol><li>Horno a 200 ºC.</li><li>Corta 80 g de tofu en 6 palitos y sécalos con papel.</li><li>En un plato mezcla 15 g de harina de avena, 1 g de pimentón dulce, una pizca de ajo en polvo y de orégano.</li><li>Unta los palitos con 3 g de aceite (con los dedos) y pásalos por la mezcla.</li><li>En papel de horno, 15 min, dándoles la vuelta a los 8.</li><li><strong>Airfryer:</strong> 190 ºC 10–12 min, sacudiendo el cestillo a los 6.</li><li>Déjalos templar. Con 30 g de brócoli cocido (brócoli congelado en agua hirviendo 6 min) y un yogur para mojar.</li></ol>`);
+
+rec("tomate","Tomate rallado para las tostadas","5 min · 3 días",`<ol><li>Lava 500 g de tomates maduros (unos 4).</li><li>Córtalos por la mitad y rállalos por el lado del corte en el rallador grueso, sobre un bol. La piel se queda en tu mano: tírala.</li><li>Añade 2 g de sal, remueve y guárdalo en un tarro con tapa en la nevera.</li><li>Por tostada: 2 cdas de tomate (30 g) y 8 g de aceite de oliva.</li></ol>`);
+
+rec("avena","Avena de noche (Diego)","3 min la noche antes",`<ol><li>En un tarro: 40 g de copos de avena y 1 yogur de soja (125 g).</li><li>100 ml de bebida de soja. Hasta que llegue el Alpro: 1 yogur más y 30 ml de agua.</li><li>5 g de lino molido (muele las semillas en la trituradora 20 segundos).</li><li>Encima: 80 g de fruta en trozos (mango, plátano o naranja) y una pizca de canela.</li><li>Tapa, remueve y a la nevera. Por la mañana, a comer con cuchara.</li></ol>`);
+
+rec("hamburguesas","Hamburguesas de soja","25 min · 6 hamburguesas (3 hoy, 3 al congelador)",`
+<h4>Ingredientes</h4><ul><li>180 g de soja texturizada</li><li>480 ml de caldo Gallina Blanca caliente</li><li>14 g de lino molido + 60 ml de agua</li><li>45 g de pan rallado y 36 g de harina de trigo</li><li>60 ml de salsa de soja</li><li>6 g de ajo en polvo, 6 g de cebolla en polvo, 4 g de pimentón dulce</li><li>50 ml de aceite de oliva (más un chorrito para la sartén)</li><li>Para montar 3: 3 panes, 3 lonchas Violife, 3 hojas de lechuga, 1 tomate (120 g) en rodajas, 45 g de mayonesa vegana</li></ul>
+<h4>Pasos</h4><ol><li>Soja en un bol con el caldo caliente, 10 min. Escúrrela apretando con las manos.</li><li>Mezcla el lino con el agua en un vaso y espera 5 min (se pone como gel).</li><li>En un bol grande: la soja, el lino, el pan rallado, la harina, la salsa de soja, el ajo, la cebolla, el pimentón y el aceite. Mezcla con las manos 2 min.</li><li>Divide en 6 bolas iguales (unos 100 g cada una) y aplástalas en hamburguesas de 1,5 cm de grosor.</li><li>Congela 3 crudas: cada una entre dos trozos de papel de horno, en una bolsa.</li><li>Sartén a fuego medio (6) con 10 g de aceite. Las 3 hamburguesas, 4 min sin tocarlas.</li><li>Dales la vuelta, pon una loncha de Violife encima, tapa la sartén y 3 min más.</li><li>Tuesta los panes 1 min en la sartén. Monta: mayonesa, lechuga, hamburguesa, tomate.</li></ol>`);
+
+rec("mini-burgers","Mini burgers de lentejas (Olivia)","20 min · 12 mini burgers",`
+<h4>Ingredientes</h4><ul><li>1 bote de lentejas cocidas Carrefour (400 g escurridas)</li><li>100 g de zanahoria (1 mediana) y 80 g de calabacín, rallados finos</li><li>40 g de harina de avena</li><li>2 g de pimentón dulce, 1 g de ajo en polvo, 1 g de orégano</li><li>12 g de aceite de oliva (y 5 g de levadura nutricional cuando la tengas)</li></ul>
+<h4>Pasos</h4><ol><li>Pon las lentejas en un colador y lávalas bajo el grifo 30 segundos (así se va la sal del bote). Escurre bien.</li><li>Ralla la zanahoria y el calabacín. Envuélvelos en papel de cocina y aprieta fuerte para quitar el agua.</li><li>En un bol chafa las lentejas con un tenedor hasta que quede una pasta con algún trocito.</li><li>Añade la verdura, la harina, las especias y el aceite. Mezcla con las manos.</li><li>Haz 12 bolitas de 50 g y aplástalas como galletas de 1,5 cm.</li><li>Horno a 190 ºC en papel de horno 15 min, dándoles la vuelta a los 8. O sartén antiadherente a fuego medio (5) con 3 g de aceite, 3 min por lado.</li><li><strong>Airfryer:</strong> 180 ºC 10 min, vuelta a los 5.</li><li>Congela las que sobren con papel entre medias. Para calentar: airfryer 180 ºC 5 min, sartén 3 min por lado o micro 40 segundos.</li></ol>
+<div class="ol"><strong>Para que le entre por los ojos:</strong> mini burger + un trocito de pan + 30 g de tomate en daditos + palitos de patata cocida (patata en bastones 12 min en agua hirviendo).</div>`);
+
+rec("coliflor","Nuggets de coliflor","25 min · para 2",`
+<h4>Ingredientes</h4><ul><li>500 g de coliflor congelada (media bolsa)</li><li>100 g de harina de trigo, 6 g de ajo en polvo, 3 g de sal y unos 130 ml de agua</li><li>150 g de pan rallado</li><li>300 ml de aceite de girasol para freír</li><li>Salsa: 30 g de mayonesa vegana, 15 g de mostaza Dijon, 4 g de azúcar</li></ul>
+<h4>Pasos</h4><ol><li>Descongela la coliflor 3 min en el micro. Sécala muy bien con papel de cocina.</li><li>Mezcla la harina, el ajo, la sal y el agua hasta que quede como una crema espesa (como yogur).</li><li>Pasa cada trozo por la crema y luego por el pan rallado.</li><li>Aceite a fuego medio-alto (7). Fríe en 2 tandas, 3–4 min, dándoles la vuelta, hasta dorar. Escurre en papel.</li><li>Horno en vez de freír: 200 ºC 25 min, pintados con 15 g de aceite, vuelta a los 12.</li><li>Mezcla la salsa.</li></ol><div class="ol"><strong>Versión Olivia (1 ración):</strong> 80 g de coliflor descongelada y seca. Rebozado: 20 g de harina de garbanzo + 25 ml de agua, sin sal (la harina de garbanzo le da proteína y hierro). Pásala luego por 10 g de harina de avena. Unta con 3 g de aceite. Airfryer 190 ºC 10 min, sacudiendo a los 5. Con un yogur para mojar.</div>`);
+
+rec("tacos","Tacos de picadillo","12 min · 2 tacos grandes",`<ol><li>Calienta en una sartén a fuego medio (5) los 300 g de picadillo con 40 g de tomate frito, 3 min removiendo.</li><li>En otra sartén sin aceite, fuego medio, calienta 2 tortillas dürüm 30 segundos por lado.</li><li>En cada tortilla: 150 g de picadillo, 30 g de Violife rallado, 20 g de lechuga en tiras finas y 50 g de tomate en daditos. 15 g de mayonesa vegana por encima.</li><li>Dóblalos. Si quieres el queso más fundido, 1 min más en la sartén.</li></ol>
+<div class="ol"><strong>Olivia:</strong> su tupper de 125 g de picadillo con 40 g de pasta (en crudo) cocida, cortada pequeña, y 2 cdas de tomate triturado caliente.</div><div class="ol"><strong>Versión Olivia:</strong> corta un cuarto de una de las tortillas. Encima: 60 g de su picadillo sin sal caliente, 20 g de aguacate chafado y 20 g de tomate en daditos. Enróllalo o córtalo en tiras.</div>`);
+
+rec("tortitas","Tortitas de plátano (para congelar)","15 min · 12 tortitas",`
+<h4>Ingredientes</h4><ul><li>2 plátanos muy maduros (240 g sin piel)</li><li>100 g de harina de avena</li><li>150 ml de bebida de soja (o 150 ml de agua hasta que llegue el Alpro)</li><li>7 g de lino molido, 4 g de levadura química Royal (1 cucharilla), 1 g de canela</li></ul>
+<h4>Pasos</h4><ol><li>Tritura todo en la trituradora 30 segundos. Deja reposar 5 min.</li><li>Sartén antiadherente a fuego medio (5) con 2 g de aceite (unas gotas extendidas con papel).</li><li>Echa 1 cucharada sopera colmada de masa (≈40 g) por tortita. Caben 3 a la vez.</li><li>2 min, hasta que salgan burbujitas arriba. Vuelta. 1 min 30 más.</li><li>Déjalas enfriar en un plato. Congela con papel de horno entre medias.</li><li>Para calentar: micro 30 segundos o tostadora.</li></ol>
+<div class="ol"><strong>Olivia:</strong> tal cual. Vosotros: con 4 g de azúcar por encima o 15 g de Nutella vegana.</div>`);
+
+rec("pollo-setas","Burger de pollo crujiente (pollo frito de setas)","30 min · 2 burgers",`
+<h4>Ingredientes</h4><ul><li>1 bandeja de setas de ostra (300 g)</li><li>Mezcla mojada: 120 g de harina, 30 g de maicena, 5 g de sal, 360 ml de agua</li><li>Mezcla seca: 60 g de harina, 60 g de maicena, 120 g de pan rallado, 20 g de sazonador para pollo</li><li>400 ml de aceite de girasol para freír</li><li>Salsa: 30 g de mayonesa vegana, 30 g de mostaza Dijon, 5 ml de zumo de limón, 4 g de azúcar, una pizca de sal y pimienta</li><li>2 panes de hamburguesa, 2 hojas de lechuga, 1 tomate (120 g)</li></ul>
+<h4>Pasos</h4><ol><li>Separa las setas en tiras de 3–4 cm y aplástalas un poco con la palma para sacarles agua.</li><li>Prepara 2 platos hondos: uno con la mezcla mojada (bátela con un tenedor) y otro con la seca.</li><li>Cada tira: mojada → seca → mojada → seca. Déjalas en un plato.</li><li>Aceite a fuego medio-alto (7). Fríe 5–6 tiras a la vez, 3 min, dándoles la vuelta, hasta que estén doradas. Escurre en papel.</li><li>Mezcla la salsa.</li><li>Monta: pan, salsa, pollo crujiente, lechuga y tomate.</li></ol><div class="ol"><strong>Versión Olivia:</strong> las setas son duras de masticar para ella. Su "burger crujiente": 3 nuggets de tofu en airfryer (receta de nuggets de tofu) dentro de un trocito de pan de hamburguesa, con 20 g de tomate. Al lado 30 g de brócoli cocido.</div>`);
+
+rec("bolonesa","Boloñesa grande","40 min · sale: comida de hoy + 6 tuppers de Olivia + la lasaña de mañana",`
+<h4>Ingredientes</h4><ul><li>250 g de soja texturizada fina Ecocesta + 500 ml de agua caliente</li><li>Verduras para triturar: 2 cebollas (400 g), 3 ajos (15 g), 1 puerro (150 g), 1 calabacín (300 g), 2 zanahorias (200 g), 200 g de champiñones, 100 g de menestra congelada</li><li>50 ml de aceite de oliva</li><li>1.560 g de tomate triturado (2 botes de 780 g)</li><li>15 g de tomate concentrado, 2 g de orégano, 2 g de pimentón dulce, 1 hoja de laurel</li></ul>
+<h4>Pasos</h4><ol><li>Soja en un bol con el agua caliente, 10 min. Escurre apretando.</li><li>Limpia las verduras (quita la parte verde dura del puerro y el tallo sucio de los champiñones), córtalas en trozos y tritúralas en 2 tandas hasta que quede un picado muy fino.</li><li>Olla grande a fuego medio (6) con el aceite. Echa el triturado y cocina 10 min removiendo de vez en cuando.</li><li>Añade la soja, el tomate triturado, el concentrado, el orégano, el pimentón y el laurel. Cuando empiece a hervir, baja a fuego bajo (3–4), tapa a medias y 25 min, removiendo cada 5 min.</li><li>Quita el laurel. Sin sal.</li><li>Reparte: 6 tuppers de 150 g para Olivia (1 a la nevera, 5 al congelador) · 1.200 g en un tupper grande para la lasaña (nevera) · el resto, comida de hoy.</li></ol>`);
+
+rec("pizza","Pizza casera rápida (sin levadura de panadería)","25 min · 1 pizza grande para 2",`
+<h4>Masa</h4><ul><li>250 g de harina de trigo</li><li>1 sobre de levadura química Royal (16 g)</li><li>3 g de sal (la mitad de una cucharilla)</li><li>36 g de aceite de oliva (3 cucharadas)</li><li>150 ml de agua templada</li></ul>
+<h4>Encima</h4><ul><li>80 g de tomate frito y 1 g de orégano</li><li>Miércoles: 250 g de boloñesa · Domingo: 3 salchichas de seitán en rodajas</li><li>120 g de mozzarella Violife rallada</li><li>Opcional: ½ pimiento (80 g) en tiras finas</li></ul>
+<h4>Pasos</h4><ol><li>Horno a 220 ºC con la bandeja dentro, 10 min antes.</li><li>En un bol: harina, levadura y sal. Añade el aceite y el agua. Mezcla con una cuchara y luego amasa con las manos 2 min, hasta que quede una bola que no se pega.</li><li>(Si haces mini pizzas para Olivia, aparta aquí 80 g de masa y mira su receta).</li><li>Pon la masa sobre papel de horno y estírala con las manos o un vaso hasta que quede de 3–4 mm.</li><li>Tomate extendido con una cuchara, orégano, la boloñesa o las salchichas, el pimiento y el queso.</li><li>Saca la bandeja caliente con guantes, pon encima la pizza con el papel y al horno 12–15 min, hasta que el borde esté dorado.</li></ol>
+<div class="ol"><strong>Atajo en 10 min:</strong> tortilla dürüm como base, los mismos ingredientes en menos cantidad, 220 ºC 7 min.</div>`);
+
+rec("mini-pizza","Mini pizzas (Olivia)","+5 min con la masa de vuestra pizza · 3 mini pizzas",`<ol><li>Aparta 80 g de la masa antes de estirar la vuestra.</li><li>Haz 3 bolitas y aplástalas en círculos de 8 cm.</li><li>Encima de cada una: 30 g de su boloñesa sin sal y 10 g de calabacín rallado. Queso: nada, o 5 g como mucho (el Violife lleva sal).</li><li>Al horno en la misma bandeja que la vuestra, 10 min.</li><li>Deja templar 3 min y córtalas en tiras.</li><li><strong>Airfryer:</strong> 180 ºC 7 min.</li><li>Las que sobren se congelan. Para calentar: airfryer 180 ºC 4 min u horno 200 ºC 8 min.</li></ol>`);
+
+rec("albondigas-soja","Albóndigas de soja fritas en tomate","15 min al mediodía + 15 min por la noche · para 2 (unas 16)",`
+<h4>Ingredientes</h4><ul><li>400 g de base de soja (el tupper del domingo)</li><li>7 g de lino molido + 25 ml de agua</li><li>21 g de pan rallado y 16 g de harina de garbanzo</li><li>2 g de orégano, 5 g de mostaza, una pizca de pimienta (y 5 g de levadura nutricional si la tienes)</li><li>300 ml de aceite de girasol para freír</li><li>350 g de tomate frito</li></ul>
+<h4>Pasos</h4><ol><li>Al mediodía: mezcla el lino con el agua en un vaso y espera 10 min.</li><li>Tritura la base de soja con 3–4 golpes cortos (que quede como carne picada, no como pasta).</li><li>En un bol mezcla con las manos la soja, el lino, el pan rallado, la harina, el orégano, la mostaza y la pimienta. Tápalo y a la nevera.</li><li>Por la noche: haz bolitas de 25 g con las manos mojadas.</li><li>Aceite a fuego medio-alto (7). Fríe en 2 tandas, 4 min, girándolas, hasta dorar. Escurre en papel.</li><li>En una sartén limpia a fuego bajo (3), el tomate frito y las albóndigas. 5 min.</li></ol><div class="ol"><strong>Versión Olivia:</strong> al mediodía, antes de echar la mostaza, aparta 75 g de masa en un tupper. Por la noche haz 3 albóndigas y hazlas en airfryer 180 ºC 10 min. Con 40 g de tomate triturado calentado 1 min al micro y un trocito de pan.</div>`);
+
+rec("sandwich-albondigas","Sándwich de albóndigas","5 min · 2 sándwiches",`<ol><li>Tuesta 4 rebanadas de pan de molde.</li><li>En 2 rebanadas: 4 albóndigas en tomate cada una, aplastadas con un tenedor.</li><li>Encima 30 g de Violife rallado cada una. Micro 40 segundos para fundir.</li><li>Tapa con la otra rebanada.</li></ol>`);
+
+rec("lasana","Lasaña ×2","40 min + horno · 2 fuentes (una se come, otra al congelador)",`
+<h4>Ingredientes</h4><ul><li>1.200 g de boloñesa (la reservada ayer)</li><li>16 placas precocidas de espinaca El Pavo</li><li>Bechamel: 100 g de margarina Flora, 100 g de harina, 1.000 ml de bebida de soja (si no tienes Alpro: 500 ml de caldo Gallina Blanca + 500 ml de agua), 1 g de nuez moscada, 3 g de sal (sin sal si usas caldo), una pizca de pimienta</li><li>160 g de mozzarella Violife rallada</li></ul>
+<h4>Pasos</h4><ol><li>Prepara las placas como diga el paquete (normalmente, unos minutos en agua caliente).</li><li>Bechamel: cazo a fuego medio (5) con la margarina. Cuando se derrita, añade la harina y remueve 1 min con varillas.</li><li>Echa el líquido poco a poco (un vaso cada vez), removiendo sin parar, hasta usarlo todo. 5 min más removiendo hasta que espese. Nuez moscada, sal y pimienta.</li><li>En cada fuente: 200 g de boloñesa, 4 placas, 150 g de bechamel, 200 g de boloñesa, 4 placas, 150 g de bechamel, 200 g de boloñesa y el resto de bechamel. 80 g de Violife por encima.</li><li>Una al horno a 180 ºC 25 min y 5 min más con el grill.</li><li>La otra, sin hornear: film + papel de aluminio y al congelador. El día que la saques: 180 ºC 45 min tapada con aluminio y 10 min destapada.</li></ol><div class="ol"><strong>Mini lasaña de Olivia:</strong> haz la bechamel <strong>sin sal</strong> y echa los 3 g de sal solo por encima de vuestras fuentes. En un cuenco apto para horno: 60 g de su boloñesa, 1 placa en trozos, 40 g de bechamel, 60 g de boloñesa y 20 g de bechamel. Sin queso. Al horno con la vuestra, 20 min.</div>`);
+
+rec("nachos","Nachos gratinados","15 min · para 2",`<ol><li>Horno a 200 ºC.</li><li>Corta 2 tortillas dürüm en 8 triángulos cada una. En papel de horno, píntalos con 10 g de aceite y 1 g de sal.</li><li>Horno 7 min, hasta que estén dorados y crujientes.</li><li>Por encima: 250 g de boloñesa caliente (micro 2 min) y 80 g de Violife rallado.</li><li>5 min más de horno, hasta que se funda el queso.</li><li>Con 100 g de tomate en daditos y 30 g de mayonesa vegana.</li></ol><div class="ol"><strong>Versión Olivia:</strong> antes de echar la sal, aparta 3 triángulos. Encima: 60 g de su boloñesa sin sal y su "guacamole": 30 g de aguacate chafado con 20 g de tomate en daditos. Sin queso.</div>`);
+
+rec("cocer-garbanzos","Cocer garbanzos","5 min + 1 h 30 solo · salen unos 1.200 g",`<ol><li>Jueves noche: 550 g de garbanzos secos en un bol con 2 L de agua fría.</li><li>Viernes por la mañana: escúrrelos y ponlos en una olla con 2,5 L de agua limpia, sin sal.</li><li>Fuego alto (8) hasta que hierva. Quita la espuma blanca con una cuchara. Baja a fuego medio (5), tapa a medias y 1 h 30 min (olla exprés: 25 min desde que sube la válvula).</li><li>Están hechos cuando uno se chafa fácil entre los dedos.</li><li>Escurre y guarda un vaso (200 ml) del agua. Reparte: 720 g para el seitán, 250 g para el hummus, 250 g para Olivia.</li></ol>`);
+
+rec("hummus","Hummus","5 min · 5 días en nevera",`<ol><li>En la trituradora: 250 g de garbanzos cocidos, 30 ml de zumo de limón (1 limón), 5 g de ajo (1 diente pequeño), 1 g de comino, 40 ml de aceite de oliva y 60 ml del agua de cocerlos.</li><li>Tritura 1 min. Si queda espeso, 20 ml más de agua.</li><li>Aparta 60 g para Olivia. Al resto, 3 g de sal y vuelve a triturar 5 segundos.</li><li>Opcional: 10 g de sésamo tostado 2 min en sartén sin aceite y triturado con el resto.</li></ol>`);
+
+rec("calamares","Calamares de berenjena","25 min · para 2",`
+<h4>Ingredientes</h4><ul><li>1 berenjena grande (350 g)</li><li>1 L de agua, 15 ml de salsa de soja, 3 g de sal, 1 hoja de nori, 15 ml de zumo de limón</li><li>Mezcla líquida: 50 g de harina, 3 g de ajo en polvo, unos 70 ml de agua</li><li>100 g de pan rallado y 300 ml de aceite de girasol</li><li>Para servir: 1 limón y 30 g de mayonesa vegana (y pan de molde si lo hacéis en bocata)</li></ul>
+<h4>Pasos</h4><ol><li>Pela la berenjena. Córtala en palitos de 1 cm de grosor y 8 cm de largo (o rodajas de 1,5 cm quitándoles el centro para hacer aros).</li><li>Olla con el agua, la soja, la sal, la nori y el limón a fuego alto. Cuando hierva, echa la berenjena, baja a fuego medio y tapa. 8 min, no más, para que no se deshaga.</li><li>Escúrrela con cuidado y sécala con papel.</li><li>Mezcla líquida con tenedor hasta que parezca yogur. Pasa cada trozo por ella y luego por el pan rallado.</li><li>Aceite a fuego medio-alto (7). Fríe en 2 tandas, 3 min, hasta dorar. Escurre en papel.</li></ol><div class="ol"><strong>Versión Olivia:</strong> antes de echar la soja y la sal al agua, cuece aparte 6 palitos de berenjena en agua sola 8 min. Rebózalos en 20 g de harina de garbanzo + 25 ml de agua y luego 10 g de harina de avena. Airfryer 190 ºC 10 min. Con 40 g de su hummus sin sal para mojar (proteína y hierro).</div>`);
+
+rec("seitan","Seitán: pollo, salchichas y filetes","25 min + 1 h cociendo solo",`
+<h4>Ingredientes</h4><ul><li>900 g de gluten de trigo</li><li>720 g de garbanzos cocidos</li><li>600 ml de caldo Gallina Blanca</li><li>90 ml de salsa de soja, 36 g de aceite, 45 g de tomate concentrado</li><li>6 g de pimentón ahumado, 6 g de ajo en polvo, 4 g de cebolla en polvo, 15 g de levadura nutricional, una pizca de pimienta</li><li>12 trozos de papel de horno y 12 de aluminio (de 20 × 20 cm)</li><li>Salsa pollo: 30 ml de salsa de soja, 4 g de aceite, 1 g de cúrcuma, 5 ml de limón</li><li>Salsa salchichas: 30 ml de salsa de soja, 2 g de pimentón ahumado, 12 g de aceite</li><li>Salsa filetes: 15 g de tomate concentrado, 15 g de levadura nutricional + 15 ml de agua, 4 g de tomillo o romero, 4 g de pimienta, 36 g de aceite</li></ul>
+<h4>Pasos</h4><ol><li>Olla grande con 5 L de agua a fuego alto.</li><li>Tritura los garbanzos con el caldo, la salsa de soja, el aceite, el tomate, las especias y la levadura hasta que quede un puré.</li><li>En un bol grande: el gluten y el puré. Mezcla con una cuchara y luego amasa con las manos 3–4 min, hasta que quede una masa elástica. Pésala y divídela en 3 partes iguales (unos 750 g cada una).</li><li>Salchichas: con una parte haz 12 cilindros de 12 cm. Envuelve cada uno en papel de horno bien apretado y luego en aluminio, retorciendo las puntas como un caramelo.</li><li>Filetes: con otra parte haz 8 bolas y aplástalas con la mano hasta que queden de 1 cm.</li><li>Pollo: la tercera parte, estírala en tiras, trénzalas y hazles nudos (así queda fibrosa).</li><li>Cuando el agua hierva: el pollo al fondo, las salchichas encima y los filetes arriba. Fuego medio (5), 1 hora. A los 30 min, da la vuelta a los filetes.</li><li>Saca todo y deja templar 10 min. Quita el papel a las salchichas.</li><li>Desmenuza el pollo con 2 tenedores en tiras. Mezcla cada cosa con su salsa.</li><li>Guarda: pollo para el kebab de hoy (300 g) en la nevera, el resto al congelador. Salchichas: 6 para esta noche y el domingo, el resto al congelador. Filetes: empánalos (harina con agua y pan rallado) y congélalos crudos, separados con papel.</li></ol>`);
+
+rec("kebab","Kebab de seitán con pan de pita rápido","20 min · 2 kebabs",`
+<h4>Pan de pita (2)</h4><ol><li>En un bol: 200 g de harina, 1 yogur de soja (125 g), 4 g de levadura química, 3 g de sal y 12 g de aceite. Amasa 1 min.</li><li>Divide en 2 bolas y estíralas con las manos o un vaso hasta que tengan 20 cm y 3 mm.</li><li>Sartén sin aceite a fuego medio (6), 2 min por lado, hasta que se inflen y tengan manchas doradas. Envuélvelas en un paño para que no se sequen.</li></ol>
+<h4>Relleno y salsa</h4><ol><li>Sartén a fuego medio-alto (7) con 12 g de aceite: 300 g de pollo de seitán en tiras, 2 g de pimentón dulce, 1 g de comino, 2 g de ajo en polvo y 1 g de orégano. 5 min hasta que se dore.</li><li>Salsa: 125 g de yogur de soja, 30 g de mayonesa vegana, 15 ml de limón, 2 g de ajo en polvo y 2 g de sal.</li><li>En cada pita: 50 g de salsa, 150 g de seitán, 20 g de lechuga en tiras y 60 g de tomate. Enrolla.</li></ol><div class="ol"><strong>Versión Olivia:</strong> el seitán no es para ella (duro y con mucha sal). Su mini kebab: un trozo de pita, 3 nuggets de garbanzo y boniato, 20 g de tomate en daditos y 1 cda de yogur de soja como salsa.</div>`);
+
+rec("escalope","Escalope de seitán empanado","15 min · para 2",`<ol><li>Saca 4 filetes empanados del congelador (no hace falta descongelar).</li><li>Sartén con 200 ml de aceite de girasol a fuego medio (6).</li><li>Fríelos 4 min por lado, hasta que estén bien dorados y calientes por dentro. Escurre en papel.</li><li>Con patatas fritas, medio limón y 30 g de mayonesa vegana.</li></ol><div class="ol"><strong>Escalope de Olivia:</strong> 1 loncha de tofu de 1 cm (80 g), secada. Rebozado: 20 g de harina de garbanzo + 25 ml de agua y luego 15 g de harina de avena con una pizca de orégano. 3 g de aceite. Airfryer 190 ºC 12 min, vuelta a los 6. Córtalo en tiras. Con 60 g de patata cocida.</div>`);
+
+rec("nuggets-boniato","Nuggets de garbanzo y boniato (Olivia)","10 min + 20 min horno · unos 20",`<ol><li>Pela 1 boniato (300 g) y córtalo en dados. Cuécelo en agua hirviendo 15 min, hasta que se chafe fácil. Escurre.</li><li>En un bol chafa el boniato con 250 g de garbanzos cocidos.</li><li>Añade 30 g de harina de avena, 1 g de pimentón dulce, una pizca de comino y 12 g de aceite (y 5 g de levadura nutricional). Mezcla.</li><li>Haz 20 palitos o bolitas de 25 g.</li><li>Horno a 190 ºC en papel de horno, 20 min, dándoles la vuelta a los 10.</li><li><strong>Airfryer:</strong> 180 ºC 12 min, sacudiendo a los 6.</li><li>Congela los que sobren. Para calentar: airfryer 180 ºC 5 min u horno 200 ºC 8 min.</li></ol><div class="ol"><strong>Para el sábado:</strong> dales forma de palito al mediodía (mini kebab) y de salchicha por la noche (salchipapas). Patatas de Olivia: 100 g en bastones, 3 g de aceite, airfryer 190 ºC 15 min, sin sal.</div>`);
+
+rec("caldo","Caldo casero sin sal","10 min + 40 min solo · 2 L",`<ol><li>Lava y trocea: 1 cebolla (200 g), 1 puerro (150 g), 2 zanahorias (200 g), 2 ramas de apio (100 g) y 200 g de calabaza.</li><li>Olla grande con 2,5 L de agua, las verduras y 1 hoja de laurel. Fuego alto hasta que hierva.</li><li>Baja a fuego medio (5), tapa a medias y 40 min.</li><li>Cuela. Congela en 4 tuppers de 500 ml y un poco en cubitera.</li><li>Las verduras cocidas, trituradas con 10 g de aceite, son un puré para Olivia.</li></ol>`);
+
+const $=s=>document.querySelector(s);
+const nav=$("#days"),panel=$("#panel"),recDiv=$("#recetas");
+function linkFor(id,txt){return `<a href="#r-${id}" class="rlink" data-r="${id}">${txt}</a>`}
+function renderDay(d){
+  const cook=d.cook.map(c=>`<li>${linkFor(c[1],c[0])} <span class="note">· ${c[2]}</span></li>`).join("");
+  const meals=d.meals.map(m=>`<div class="meal"><h3>${m[0]}</h3><div class="who"><span class="pill">Vosotros</span><span>${m[1]}</span><span class="pill o">Olivia</span><span>${m[2]}</span></div></div>`).join("");
+  panel.innerHTML=`<div style="display:flex;flex-direction:column;gap:16px">
+  <div class="box hl"><div class="eyebrow">Hoy cocinas</div><ul class="cook">${cook}</ul></div>
+  <div class="box">${meals}</div>
+  <div class="box night"><div class="eyebrow">Antes de dormir</div><p>${d.night}</p></div>
+  <div class="box"><p class="note">Regla de siempre: Olivia come lo mismo que vosotros en versión mini, sin sal, sin picante y en airfryer u horno (nunca frito en aceite). Cada comida y cena suya lleva proteína con hierro (soja, lentejas, garbanzos o tofu) y algo con vitamina C (tomate, brócoli o fruta). Todo fino o triturado para Andrea.</p></div></div>`;
+  panel.hidden=false;recDiv.hidden=true;
+}
+function renderRecipes(){
+  const idx=Object.entries(R).map(([id,r])=>`<a href="#r-${id}" data-r="${id}">${r.title}</a>`).join("");
+  recDiv.innerHTML=`<div style="display:flex;flex-direction:column;gap:16px"><div class="box"><h2>Todas las recetas</h2><div class="idx">${idx}</div></div>`+
+  Object.entries(R).map(([id,r])=>`<div class="box recipe" id="r-${id}"><h2>${r.title}</h2><div class="meta"><span>${r.meta}</span></div>${r.body}</div>`).join("")+`</div>`;
+}
+function select(key){
+  [...nav.children].forEach(b=>b.setAttribute("aria-selected",b.dataset.k===key));
+  if(key==="rec"){panel.hidden=true;recDiv.hidden=false}else{renderDay(DAYS.find(d=>d.id===key))}
+  try{localStorage.setItem("menu-tab",key)}catch(e){}
+}
+DAYS.forEach(d=>{const b=document.createElement("button");b.dataset.k=d.id;b.setAttribute("role","tab");b.innerHTML=`${d.label}<small>${d.date}</small>`;b.onclick=()=>select(d.id);nav.appendChild(b)});
+const rb=document.createElement("button");rb.dataset.k="rec";rb.innerHTML=`Recetas<small>todas</small>`;rb.onclick=()=>{select("rec");window.scrollTo(0,0)};nav.appendChild(rb);
+renderRecipes();
+document.addEventListener("click",e=>{const a=e.target.closest("[data-r]");if(!a)return;e.preventDefault();select("rec");const el=document.getElementById("r-"+a.dataset.r);if(el)el.scrollIntoView({behavior:"smooth",block:"start"})});
+const today=new Date();const iso=today.getFullYear()+"-"+String(today.getMonth()+1).padStart(2,"0")+"-"+String(today.getDate()).padStart(2,"0");
+let start=(DAYS.find(d=>d.iso===iso)||{}).id;
+if(!start){try{start=localStorage.getItem("menu-tab")}catch(e){}}
+window.menuSelect=select;window.menuToday=()=>{const t=new Date(),i=t.getFullYear()+"-"+String(t.getMonth()+1).padStart(2,"0")+"-"+String(t.getDate()).padStart(2,"0");return (DAYS.find(d=>d.iso===i)||{}).id||DAYS[0].id};
+select(start&&(start==="rec"||DAYS.some(d=>d.id===start))?start:"d27");
+
+})();
+(function(){
+
+const T={P:"Para probar",D:"Desayuno",B:"Batch",L:"Lasaña",C:"Garbanzos con tomate",A:"Albóndigas lentejas",H:"Hamburguesas",Y:"Hoy",O:"Olivia"};
+// [nombre, cantidad, usos, nota, flags (r=revisar, x=puede no haber, w=internet), precio €]
+const aisles=[
+ ["Frutería y verdura","sin marca: coge la que veas mejor",[
+  ["Cebollas blancas","5 (ya tienes 3)","BLAO","","",1.8,"",""],
+  ["Cebollas moradas","3","L","","",1.5,"",""],
+  ["Ajos","3 cabezas","BLCA","","",1.5,"",""],
+  ["Puerros","3","LO","1 es para el caldo casero de Olivia.","",2.2,"",""],
+  ["Apio","1 manojo","O","Para el caldo casero de Olivia.","",1,"",""],
+  ["Calabacines","3","LO","","",2.5,"",""],
+  ["Zanahorias","1 kg","O","","",1.2,"",""],
+  ["Champiñones","200 g","L","","",1.5,"",""],
+  ["Setas de ostra","1 bandeja","P","Para el pollo frito del martes. Zona de setas y hongos.","",2.46,"Seta ostra cultivada Círculo de Calidad 300 g",""],
+  ["Berenjena grande","1","P","Para los calamares del viernes.","",0.9,"",""],
+  ["Espinacas frescas","2 bolsas (≈300 g)","CO","","",3,"",""],
+  ["Limones","4","BAY","","",1.5,"",""],
+  ["Aguacates","3","OY","","",3,"",""],
+  ["Plátanos","1 manojo","O","","",2,"",""],
+  ["Tomates maduros","1 kg","D","Para el tomate rallado de las tostadas.","",2,"",""],
+  ["Lechuga","1","H","","",0.9,"",""],
+  ["Remolacha cocida envasada","1 paquete","O","Para la pasta rosa. Suele estar junto a las ensaladas preparadas.","",1.2,"","e"]]],
+ ["Nevera de tofu y veggie","",[
+  ["Tofu natural","3 bloques","BYO","","",6.57,"Tofu natural ecológico Carrefour Bio 400 g","c"],
+  ["Tofu japonés (el más blando que hay)","1","O","Para la pasta rosa. No hay tofu sedoso en Carrefour; si tampoco ves este, usa un bloque más del normal.","x",2.39,"Tofu japonés ecológico Carrefour Bio 380 g","c"]]],
+ ["Lácteos y yogures","todo vegetal",[
+  ["Bebida de soja sin azúcar con calcio","5 bricks de 1 L","BLYO","La de marca Carrefour no sirve: la 'con calcio' lleva azúcar y la 'sin azúcar' no lleva calcio.","",11.45,"Alpro Bebida de soja sin azúcar 1 L","c"],
+  ["Yogur de Olivia","1 pack de 6","O","Es el Sojasun natural con calcio.","",3.49,"Sojasun Bífidus natural sin azúcar, pack 6 × 100 g","c"],
+  ["Yogur de soja para vosotros","2 packs de 6","D","","",3.6,"Postre de soja natural Carrefour Sensation, pack 6 × 100 g","c"],
+  ["Margarina","1 tarrina","L","La margarina Carrefour NO vale: lleva leche en polvo.","",3.19,"Flora Original 400 g","c"],
+  ["Queso vegano en lonchas","1 paquete","H","Nevera de quesos.","",4.19,"Violife lonchas Original 200 g","c"]]],
+ ["Legumbres y dietética","",[
+  ["Garbanzos cocidos","3 botes","CYO","Bote de cristal, solo garbanzo. Hay versión sin sal añadida: mejor para Olivia.","",2.4,"Garbanzos cocidos Classic Carrefour 400 g","c"],
+  ["Lentejas cocidas","5 botes","AO","","",4.5,"Lentejas cocidas Carrefour 400 g","c"],
+  ["Lentejas rojas peladas","1 paquete","O","Ojo: la 'lenteja roja La Cochura' no está pelada. Coge la Luengo.","",2.69,"Lentejas peladas Luengo 400 g","c"],
+  ["Soja texturizada","4 paquetes","BLH","Zona de dietética o junto a las legumbres. Para Olivia, su Ecocesta fina de siempre.","",10.2,"Soja texturizada Carrefour Classic 250 g","c"],
+  ["Soja texturizada fina (Olivia)","1 paquete","O","","",4.49,"Soja texturizada fina ecológica Ecocesta 250 g","c"],
+  ["Gluten de trigo","2 paquetes","B","Zona de dietética. Puede no estar: si no, pídelo por internet (abajo). Sin él no hay seitán.","x",6.5,"Gluten de trigo Naturcesta 500 g","e"]]],
+ ["Harinas, pasta y pan rallado","",[
+  ["Harina de garbanzo","1 paquete","B","","",1.99,"Harina de garbanzo Extra Carrefour 500 g","c"],
+  ["Levadura química","1 caja de 6 sobres","O","No confundir con la levadura de panadería.","",2.69,"Royal Polvo gasificante, 6 sobres","c"],
+  ["Pan rallado","2 bolsas","BHY","","",1.7,"Pan rallado Carrefour 750 g (el normal, no el de ajo y perejil)","c"],
+  ["Pasta de estrellitas","1 paquete","O","Opcional: con tus macarrones cortados también vale. La otra pasta ya la tienes.","",0.8,"Pasta estrellas Carrefour Classic 500 g","c"],
+  ]],
+ ["Conservas y salsas","",[
+  ["Tomate triturado","2 botes","LACO","","",1.96,"Tomate triturado Classic Carrefour 780 g","e"],
+  ["Tomate doble concentrado","2 latas","BLC","Si ves la lata grande Carrefour (440 g), coge 1 de esa.","",1.6,"Tomate doble concentrado Hida 170 g","e"],
+  ["Tomate frito","1 frasco","B","","",0.83,"Tomate frito Carrefour Classic frasco 550 g","c"],
+  ["Salsa de soja baja en sal","1 botella","BAHY","Es cara (≈11 €). Más barata: cualquier salsa de soja normal que solo lleve soja, trigo, agua y sal.","",11.19,"Kikkoman baja en sal 500 ml","c"],
+  ["Mostaza","1","BY","Evita la mostaza con miel.","",1.62,"Mostaza Orlando 290 g","c"],
+  ["Mostaza Dijon","1","BY","","",1.25,"Mostaza de Dijon Classic Carrefour 200 g","c"],
+  ["Alcaparras","1 tarro","Y","Pasillo de encurtidos.","",1.35,"Alcaparras Carrefour 80 g","c"],
+  ["Vinagre balsámico","1 botella pequeña","L","","",2,"Cualquiera","e"]]],
+ ["Especias","",[
+  ["Pimentón dulce","1 bote","BCAHO","Tu pimentón es picante: no vale para Olivia.","",0.87,"Pimentón dulce Carrefour Classic 45 g","c"],
+  ["Pimentón ahumado","1 bote","BH","El 'de la Vera' es el ahumado.","",1.85,"Pimentón de la Vera dulce Carrefour Original 75 g","c"],
+  ["Ajo en polvo","1 bote","BHOY","","",0.64,"Ajo granulado Carrefour Classic 55 g","c"],
+  ["Cebolla en polvo","1 bote","BH","","",0.48,"Cebolla granulada Carrefour Classic 30 g","c"],
+  ["Laurel","1 bote","BL","","",0.71,"Laurel hoja Carrefour Classic 10 g","c"],
+  ["Eneldo","1 bote","A","","",1.5,"Eneldo Carrefour o Carmencita","c"],
+  ["Sazonador para pollo","1 bote","P","El de marca Carrefour: no se pudo comprobar, mira que no lleve leche. Ducros también vale.","x",2.39,"Carmencita Sazonador para pollo","c"]]],
+ ["Desayuno y dulce","",[
+  ["Crema de cacao vegana","1 bote","D","Para cuando se acabe la que tenéis.","",5.05,"Nutella Plant-Based 350 g","c"],
+  ["Crema de cacahuete","1 bote","OD","Solo cacahuete, sin azúcar ni sal.","",2.75,"Crema de cacahuete 100% Sensation Carrefour 500 g","c"],
+  ["Copos de avena","1 kg","D","Para tu avena de noche.","",1.5,"Copos de avena Carrefour","e"],
+  ["Azúcar","1 kg","D","Es seguro que es vegano (azúcar de remolacha española). La de marca Carrefour no dice de qué es.","",1.07,"Azúcar blanco Azucarera 1 kg","c"],
+  ["Mermelada (para ti)","1 tarro","D","Lleva pectina, no gelatina.","",1.4,"Mermelada de fresa extra Carrefour 410 g","e"],
+  ["Aroma de vainilla","1 bote","D","Opcional, para las magdalenas. Zona de repostería.","",4.65,"Vahiné aroma de vainilla 200 ml","c"]]],
+ ["Congelados","",[
+  ["Guisantes","1 bolsa","O","","",1.5,"Guisantes Carrefour 1 kg","c"],
+  ["Brócoli (1 más)","1 bolsa","O","Con lo que ya tienes congelado llegáis a 2–3 semanas; esta bolsa extra os asegura el mes.","",1.8,"Brócoli ultracongelado Carrefour Classic 900 g","c"],
+  ["Frutos rojos","1 bolsa","O","Para los polos. Arcón de helados y fruta congelada.","",3.15,"Mix frutos rojos Carrefour 500 g","c"]]],
+ ["Panadería y aperitivos","",[
+  ["Pan de hamburguesa","2 paquetes de 4","H","Sin leche ni huevo. Lleva un emulgente (E471) que a veces es de origen animal y no lo indican; evita los de brioche.","",1.7,"Pan de burger maxi Classic Carrefour 4 ud","e"],
+  ["Pan de molde integral","1","D","","",1.1,"Pan de molde 100% integral Carrefour Classic 450 g","c"],
+  ["Pan de molde de centeno","1","D","","",1.27,"Pan de molde centeno Original Carrefour 675 g","c"],
+  ["Crackers","1 paquete","Y","","",0.94,"Cracker's integrales Classic Carrefour 250 g","c"],
+  ["Patatas fritas de bolsa","1–2 bolsas","Y","","",1.66,"Patatas fritas lisas Classic Carrefour 170 g","c"],
+  ]],
+ ["Menaje","",[
+  ["Tuppers pequeños para Olivia","≈25","O","","",12,"",""],
+  ["Cubitera de silicona","1–2","O","Para congelar las salsas de colores.","x",4,"",""],
+  ["Moldes de polo","1 juego","O","","x",4,"",""],
+  ["Cortadores de galletas (estrella, corazón)","1 juego","O","","x",3,"",""],
+  ["Plato infantil con compartimentos","1","O","Si no tiene ya.","r",4,"",""],
+  ["Tarros de cristal con tapa","4–6","D","Para tu avena de noche. Valen botes de conserva reciclados.","r",5,"",""],
+  ["Bolsas de congelación","1 caja","","","r",2,"",""],
+  ["Papel de aluminio, papel de horno y film","","B","","r",4,"",""]]],
+ ["Por internet o herbolario","Carrefour no los tiene en tienda",[
+  ["Levadura nutricional en copos","250 g","BLAO","En la web de Carrefour solo la venden terceros (≈12 €). En Amazon o herbolario sale más barata.","w",8,"",""],
+  ["Sal negra kala namak","100–150 g","","Para esta compra NO es necesaria.","w",5,"",""],
+  ["Gluten de trigo (plan B)","1 kg","B","Solo si no lo encuentras en el Carrefour. No lo sumo al total.","w",0,"",""]]]
+];
+const KEY="compra-carrefour-v16";
+let st={};try{st=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){}
+let dbDoc=null,writing=false,pending=false;
+async function pushDb(){if(!dbDoc)return;if(writing){pending=true;return}writing=true;try{await dbDoc.set({items:{...st},updated:Date.now()})}catch(e){}writing=false;if(pending){pending=false;pushDb()}}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){};pushDb()};
+function applyState(){document.querySelectorAll("#aisles input").forEach(i=>{const v=!!st[i.id];i.checked=v;i.closest("li").classList.toggle("done",v)});upd()}
+(async()=>{try{const db=await window.claude?.use?.("db");if(!db)return;dbDoc=db.doc("compra/marcados");const first=await dbDoc.get();if(first.exists){st={...(first.data().items||{})};applyState()}else if(Object.keys(st).length){pushDb()}
+dbDoc.onSnapshot(s=>{if(!s.exists||s.metadata.hasPendingWrites)return;st={...(s.data().items||{})};applyState()},()=>{})}catch(e){}})();
+const eur=n=>n.toFixed(2).replace(".",",")+" €";
+const root=document.getElementById("aisles");let total=0;const prices={};let sMain=0,sRev=0,sWeb=0;
+aisles.forEach((a,ai)=>{
+  const s=document.createElement("section");s.className="aisle";
+  s.innerHTML=`<h2>${a[0]}${a[1]?`<small>${a[1]}</small>`:""}</h2>`;
+  const ul=document.createElement("ul");ul.className="list";
+  a[2].forEach((it,ii)=>{
+    total++;const id="c-"+it[0].normalize("NFD").replace(/[^a-zA-Z0-9]+/g,"-").toLowerCase();const [n,q,uses,note,fl,p,brand,vg]=it;prices[id]=p||0;
+    if(fl.includes("w"))sWeb+=p;else if(fl.includes("r"))sRev+=p;else sMain+=p;
+    let tags=fl.includes("r")?'<span class="tag rev">Revisar en casa</span>':"";
+    if(fl.includes("x"))tags+='<span class="tag miss">Puede no haber</span>';
+    if(fl.includes("w"))tags+='<span class="tag web">Pedir online</span>';
+    if(vg==="c")tags='<span class="tag vok">✓ Vegano comprobado</span>'+tags;
+    if(vg==="e")tags='<span class="tag rev">Mira la etiqueta</span>'+tags;
+    tags+=[...(uses||"")].map(k=>`<span class="tag${k==="Y"||k==="D"?" hoy":k==="O"?" baby":""}">${T[k]}</span>`).join("");
+    const li=document.createElement("li");if(st[id])li.className="done";
+    li.innerHTML=`<label class="item" for="${id}"><input type="checkbox" id="${id}" ${st[id]?"checked":""}><span>${p?`<span class="price">≈ ${eur(p)}</span>`:""}<span class="name">${n}</span>${q?` · <span class="qty">${q}</span>`:""}${brand?`<div class="brand">${brand}</div>`:""}<span class="meta">${tags}</span>${note?`<div class="note">${note}</div>`:""}</span></label>`;
+    li.querySelector("input").addEventListener("change",e=>{st[id]=e.target.checked;li.classList.toggle("done",e.target.checked);save();upd()});
+    ul.appendChild(li);
+  });
+  s.appendChild(ul);root.appendChild(s);
+});
+document.getElementById("tot-main").textContent="≈ "+eur(sMain);
+document.getElementById("tot-rev").textContent="+ "+eur(sRev);
+document.getElementById("tot-web").textContent="+ "+eur(sWeb);
+function upd(){const ids=Object.keys(st).filter(k=>st[k]);const d=ids.length;document.getElementById("count").textContent=`${d} / ${total}`;document.getElementById("progfill").style.width=(d/total*100)+"%";document.getElementById("tot-cart").textContent=eur(ids.reduce((a,k)=>a+(prices[k]||0),0))}
+upd();
+document.getElementById("reset").addEventListener("click",()=>{st={};save();document.querySelectorAll("#aisles input").forEach(i=>{i.checked=false;i.closest("li").classList.remove("done")});upd()});
+const tabs=["lista","dia","plan","oli","hoy","des"];
+tabs.forEach(t=>document.getElementById("t-"+t).addEventListener("click",()=>{tabs.forEach(o=>{document.getElementById("p-"+o).hidden=o!==t;document.getElementById("t-"+o).setAttribute("aria-selected",o===t)})}));
+
+})();
+
+(function(){
+const views={menu:document.getElementById("v-menu"),compra:document.getElementById("v-compra")};
+const btns=[...document.querySelectorAll(".tabbar button")];
+function go(k){
+  const v=k==="compra"?"compra":"menu";
+  views.menu.hidden=v!=="menu";views.compra.hidden=v!=="compra";
+  btns.forEach(b=>b.setAttribute("aria-current",b.dataset.go===k));
+  if(k==="rec"&&window.menuSelect)window.menuSelect("rec");
+  if(k==="menu"&&window.menuSelect)window.menuSelect(window.menuToday());
+  window.scrollTo(0,0);
+  try{localStorage.setItem("app-view",k)}catch(e){}
+}
+btns.forEach(b=>b.onclick=()=>go(b.dataset.go));
+document.addEventListener("click",e=>{if(e.target.closest("#v-menu [data-r]"))btns.forEach(b=>b.setAttribute("aria-current",b.dataset.go==="rec"))});
+let k="menu";try{const s=localStorage.getItem("app-view");if(s==="compra")k=s}catch(e){}
+go(k);
+})();
+
+</script>
+</body></html>
